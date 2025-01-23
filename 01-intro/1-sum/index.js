@@ -6,5 +6,5 @@
  * @returns {number}
  */
 export const sum = (m, n) => {
-
+    retrun m + n;
 };
