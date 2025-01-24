@@ -1,10 +1,4 @@
-/**
- * sortStrings - sorts array of string by two criteria "asc" or "desc"
- * @param {string[]} arr - the array of strings
- * @param {string} [param="asc"] param - the sorting type "asc" or "desc"
- * @returns {string[]}
- */
-export function sortStrings(arr, sortSpec) {
+function sortStrings(arr, sortSpec) {
     let tempPosition = null;
     let upperSymbolArr = arr.filter((word) => word.slice(0, 1) === word.slice(0, 1).toUpperCase());
     if (upperSymbolArr.length != 0) arr = arrayToLowerCase(arr);
