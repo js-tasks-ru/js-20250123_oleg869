@@ -1,1 +1,0 @@
-npm run test:specific --findRelatedTests 02-javascript-data-types/1-sort-strings/index.spec.js
