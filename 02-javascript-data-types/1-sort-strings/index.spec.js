@@ -4,7 +4,7 @@ describe('javascript-data-types/sort-strings', () => {
   it('should return sorted by "asc" array of strings', () => {
     expect(sortStrings(['b', 'c', 'a'])).toEqual(['a', 'b', 'c']);
   });
-/*
+
   it('should return a new sorted array', () => {
     const arr = ['b', 'c', 'a'];
     const arrCopy = [...arr];
@@ -57,5 +57,5 @@ describe('javascript-data-types/sort-strings', () => {
 
     expect(sortStrings(data, 'asc')).toEqual(expectedAsc);
     expect(sortStrings(data, 'desc')).toEqual(expectedDesc);
-  });*/
+  });
 });
