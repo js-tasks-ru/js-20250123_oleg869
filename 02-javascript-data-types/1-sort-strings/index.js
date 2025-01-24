@@ -4,11 +4,11 @@
  * @param {string} [param="asc"] param - the sorting type "asc" or "desc"
  * @returns {string[]}
  */
-
-export function sortStrings(arr, sortSpec) {
+export function sortStrings(arr, param="asc") {
     let tempComparePosition = null;
     let tempPosition = null;
-    if (sortSpec === 'desc') {
+    let arrOut = new Array();
+    if (param === 'desc') {
         for (let i = 0; i < arr.length; i++) {
             for (let k = 0; k < arr.length; k++) {
                 tempPosition = arr[k].localeCompare(arr[i], ['ru', 'en'], { caseFirst: "upper" });
@@ -16,7 +16,7 @@ export function sortStrings(arr, sortSpec) {
                     tempComparePosition = arr[i];
                     arr[i] = arr[k];
                     arr[k] = tempComparePosition;
-                }
+                }                
 
             }
         }
@@ -30,9 +30,11 @@ export function sortStrings(arr, sortSpec) {
                     arr[i] = arr[k];
                     arr[k] = tempComparePosition;
                 }
-
             }
         }
     }
-    return arr;
+    for(let i = 0; i < arr.length; i++){
+        arrOut.push(arr[i]);
+    }
+    return arrOut;
 }
