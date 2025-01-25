@@ -5,5 +5,8 @@
  * @returns {object} - returns the new object
  */
 export const pick = (obj, ...fields) => {
-
+    const checkArray = (a, b) => b.indexOf(a) >= 0;
+    return Object.fromEntries(
+        Object.entries(obj).filter(item => checkArray(item[0], fields))
+    );
 };
