@@ -4,15 +4,7 @@
  * @returns {*[]} - the new array with uniq values
  */
 export function uniq(arr) {
-    let symbolSet = new Set();
-    if (typeof arr !== "undefined") {
-        for (let elem of arr) {
-            symbolSet.add(elem);
-        }
-    }
-    let outPut = new Array();
-    for (let elem of symbolSet.values()) {
-        outPut.push(elem);
-    }
-    return outPut;
+    if (!arr) return []
+    const symbolUniqSet = [...new Set(arr)];
+    return symbolUniqSet;
 }
