@@ -5,7 +5,7 @@
  * @returns {string} - the new string without extra symbols according passed size
  */
 export function trimSymbols(string, size) {
-    let symbolMap = new Map();
+    const symbolMap = new Map();
     let symbolContainer = '';
     let globalKey = 0;
     const addRecInMap = (symbol) =>{
