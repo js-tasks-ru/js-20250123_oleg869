@@ -11,6 +11,11 @@ export default class ColumnChar {
       element.innerHTML = this.getStaticOrderTemplate();
       return element.firstElementChild;
     }
+    createColumnCharElement() {
+        const element = document.createElement('div');
+        element.innerHTML = this.getStaticOrderTemplate();
+        return element.firstElementChild;
+      }
     getStaticOrderTemplate() {
       let val = ''
       for (let elem of this.data) {
@@ -18,8 +23,9 @@ export default class ColumnChar {
           <div style="--value: ${elem}" data-tooltip="${elem * 2}%"></div>
         `;
       }
+      
   
-      return `<div class="dashboard__chart_orders">
+      return `<div class="${this.template}">
       <div class="column-chart" style="--chart-height: 50">
         <div class="column-chart__title">
           ${this.label}
