@@ -1,32 +1,34 @@
 export default class ColumnChar {
-    constructor({ data, label, link, value } = {}) {
-      this.data = data || [];
-      this.label = label || '';
-      this.link = link || '';
-      this.value = value || 0;
-      this.element = this.createColumnCharElement();
-    }
-    createColumnCharElement() {
-      const element = document.createElement('div');
-      element.innerHTML = this.getStaticOrderTemplate();
-      return element.firstElementChild;
-    }
-    createColumnCharElement() {
-        const element = document.createElement('div');
-        element.innerHTML = this.getStaticOrderTemplate();
-        return element.firstElementChild;
-      }
-    getStaticOrderTemplate() {
-      let val = ''
-      for (let elem of this.data) {
-        val = val + `
+  constructor({ data, label, link, value } = {}) {
+    this.data = data || [];
+    this.label = label || '';
+    this.link = link || '';
+    this.value = value || 0;
+    this.element = this.createColumnCharElement();
+    this.chartHeight = 50;
+  }
+  createColumnCharElement() {
+    const element = document.createElement('div');
+    element.innerHTML = this.getStaticOrderTemplate();
+    return element.firstElementChild;
+  }
+  createColumnCharElement() {
+    const element = document.createElement('div');
+    element.innerHTML = this.getStaticOrderTemplate();
+    return element.firstElementChild;
+  }
+  destroy() {
+    this.element.remove();
+  }
+  getStaticOrderTemplate() {
+    let val = ''
+    for (let elem of this.data) {
+      val = val + `
           <div style="--value: ${elem}" data-tooltip="${elem * 2}%"></div>
         `;
-      }
-      
-  
-      return `<div class="${this.template}">
-      <div class="column-chart" style="--chart-height: 50">
+    }
+    return `<div class="${this.template}">
+      <div class="column-chart" style="--chart-height: ${this.chartHeight}">
         <div class="column-chart__title">
           ${this.label}
           <a href="/${this.link}" class="column-chart__link">View all</a>
@@ -38,5 +40,5 @@ export default class ColumnChar {
         </div>
       </div>
     </div>`
-    }
   }
+}
