@@ -1,5 +1,5 @@
 export default class ColumnChar {
-  constructor({ data, label, link, value } = {}) {
+  constructor({ data, label, link, value, formatHeading } = {}) {
     this.data = data || [];
     this.label = label || '';
     this.link = link || '';
@@ -8,6 +8,7 @@ export default class ColumnChar {
     this.chartHeight = 50;
     this.diagramParam = this.getColumnProps(this.data);
     this.template = this.getTemplateName(this.label);
+    this.formatHeading = formatHeading;
   }
 
   createColumnCharElement() {
@@ -16,12 +17,12 @@ export default class ColumnChar {
     return element.firstElementChild;
   }
 
-  getTemplateName(label){
-    switch(label){
+  getTemplateName(label) {
+    switch (label) {
       case 'orders': return 'dashboard__chart_orders';
       case 'sales': return 'dashboard__chart_sales';
       case 'customers': return 'dashboard__chart_sales';
-      default: return 'empty';
+      default: return 'column-chart column-chart_loading';
     }
   }
 
