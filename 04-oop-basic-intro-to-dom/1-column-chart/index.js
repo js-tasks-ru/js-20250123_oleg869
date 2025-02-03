@@ -6,6 +6,7 @@ export default class ColumnChar {
     this.value = value || 0;
     this.element = this.createColumnCharElement();
     this.chartHeight = 50;
+    this.diagramParam = getColumnProps(this.data);
   }
   createColumnCharElement() {
     const element = document.createElement('div');
@@ -20,17 +21,25 @@ export default class ColumnChar {
   destroy() {
     this.element.remove();
   }
+  getColumnProps(data) {
+    const maxValue = Math.max(...data);
+    const scale = 50 / maxValue;
+
+    return data.map(item => {
+      return {
+        percent: (item / maxValue * 100).toFixed(0) + '%',
+        value: String(Math.floor(item * scale))
+      };
+    });
+  }
   getStaticOrderTemplate() {
-    let val = ''
-    for (let elem of this.data) {
-      val = val + `
-          <div style="--value: ${elem}" data-tooltip="${elem * 2}%"></div>
-        `;
-    }
+    const diagramParamFromProp = this.diagramParam.map(({ percent, value }) => `
+      <div style="--value: ${value}" data-tooltip="${percent}%"></div>
+    `)
     return `<div class="${this.template}">
       <div class="column-chart" style="--chart-height: ${this.chartHeight}">
         <div class="column-chart__title">
-          ${this.label}
+          ${diagramParamFromProp}
           <a href="/${this.link}" class="column-chart__link">View all</a>
         </div>
         <div class="column-chart__container">
