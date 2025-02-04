@@ -37,7 +37,7 @@ export default class ColumnChart {
 
   getDataElementsFromBody() {
     const element = this.element.querySelector('[data-element="body"]');
-    return {body : element};
+    return { body: element };
   }
 
   destroy() {
@@ -87,15 +87,3 @@ export default class ColumnChart {
             </div>`;
   }
 }
-
-const columnChart = new ColumnChart({
-  data: [20, 20, 10],
-  label: 'customers',
-  link: 'sales',
-  value: 2045
-});
-
-
-document.body.append(columnChart.element);
-console.log(columnChart.getDataElementsFromBody());
-columnChart.update([10, 40, 73, 29, 9, 32]);
