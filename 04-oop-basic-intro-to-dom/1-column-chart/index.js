@@ -74,7 +74,9 @@ export default class ColumnChart {
                     <a href="/${this.link}" class="column-chart__link">View all</a>
                   </div>
                   <div class="column-chart__container">
-                    <div data-element="header" class="column-chart__header">${this.value}</div>
+                    <div data-element="header" class="column-chart__header">
+                      ${this.formatHeading ? this.formatHeading(this.value) : this.value}
+                    </div>
                     <div data-element="body" class="column-chart__chart">
                       ${this.setColumnProps()}
                     </div>
