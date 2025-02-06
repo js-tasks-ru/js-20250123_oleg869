@@ -12,6 +12,10 @@ export default class NotificationMessage {
         return element.firstChild;
     }
 
+    show(div){ // рендер объекта
+
+    }
+
     getTemplate(){
         return `
             <div class="notification success" style="--value:20s">
@@ -24,6 +28,14 @@ export default class NotificationMessage {
                 </div>
             </div>
         `;
+    }
+
+    destroy(){
+        this.remove();
+    }
+
+    remove(){
+        this.element.remove();
     }
 
 }
