@@ -1,31 +1,31 @@
 export default class NotificationMessage {
     //class NotificationMessage {
     static lastShownComponent;
-    constructor(message, {duration, type} = {}){
+    constructor(message, { duration, type } = {}) {
         this.message = message || '';
         this.duration = duration || 0;
         this.type = type || '';
         this.element = this.setElement();
     }
 
-    setElement(){
+    setElement() {
         const element = document.createElement('div');
         element.innerHTML = this.getTemplate();
-        return element.firstElementChild ;
+        return element.firstElementChild;
     }
-  
-    show(){
-      if(NotificationMessage.lastShownComponent){
-        NotificationMessage.lastShownComponent.remove();
-      }
-      NotificationMessage.lastShownComponent = this;    
-      document.body.append(this.element);  
-      setTimeout(() => {
-        this.remove();
-      }, this.duration);
+
+    show(inputHTMLElement) {
+        if (NotificationMessage.lastShownComponent) {
+            NotificationMessage.lastShownComponent.remove();
+        }
+        NotificationMessage.lastShownComponent = this;
+        if (inputHTMLElement) { inputHTMLElement.innerHTML = this.getTemplate(); }
+        setTimeout(() => {
+            this.remove();
+        }, this.duration);
     }
-  
-    getTemplate(){
+
+    getTemplate() {
         return `
             <div class="notification ${this.type}" style="--value:${this.duration}s">
                 <div class="timer"></div>
@@ -38,16 +38,16 @@ export default class NotificationMessage {
             </div>
         `;
     }
-  
-    destroy(){
+
+    destroy() {
         this.remove();
     }
-  
-    remove(){
+
+    remove() {
         this.element.remove();
     }
-  
-  }
+
+}
 
 //notificationMessage = new NotificationMessage('Пивко всем за мой счет');
 //document.body.append(notificationMessage.element);
