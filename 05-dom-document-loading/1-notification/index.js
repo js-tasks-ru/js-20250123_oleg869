@@ -1,5 +1,6 @@
-//export default class NotificationMessage {
-    class NotificationMessage {
+export default class NotificationMessage {
+    //class NotificationMessage {
+    static lastShownComponent;
     constructor(message, {duration, type}){
         this.message = message || '';
         this.duration = duration || 0;
@@ -13,15 +14,14 @@
         return element.firstElementChild ;
     }
   
-    show(){ // рендер объекта
-      const existing = document.querySelector('.notification');
-      if (existing) console.log('object exist');
-    
-      document.body.append(this.element);
-  
+    show(){
+      if(NotificationMessage.lastShownComponent){
+        NotificationMessage.lastShownComponent.remove();
+      }
+      NotificationMessage.lastShownComponent = this;    
+      document.body.append(this.element);  
       setTimeout(() => {
         this.remove();
-        console.log(this.duration);
       }, this.duration);
     }
   
@@ -49,6 +49,6 @@
   
   }
 
-notificationMessage = new NotificationMessage('Пивко всем за мой счет', 5000);
-document.body.append(notificationMessage.element);
-notificationMessage.show();
+//notificationMessage = new NotificationMessage('Пивко всем за мой счет', 5000);
+//document.body.append(notificationMessage.element);
+//notificationMessage.show();
