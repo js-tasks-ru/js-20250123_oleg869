@@ -1,7 +1,7 @@
 export default class NotificationMessage {
     //class NotificationMessage {
     static lastShownComponent;
-    constructor(message, {duration, type}){
+    constructor(message, {duration, type} = {}){
         this.message = message || '';
         this.duration = duration || 0;
         this.type = type || '';
@@ -27,7 +27,7 @@ export default class NotificationMessage {
   
     getTemplate(){
         return `
-            <div class="notification success" style="--value:${this.duration}s">
+            <div class="notification ${this.type}" style="--value:${this.duration}s">
                 <div class="timer"></div>
                 <div class="inner-wrapper">
                 <div class="notification-header">${this.type}</div>
@@ -49,6 +49,6 @@ export default class NotificationMessage {
   
   }
 
-//notificationMessage = new NotificationMessage('Пивко всем за мой счет', 5000);
+//notificationMessage = new NotificationMessage('Пивко всем за мой счет');
 //document.body.append(notificationMessage.element);
 //notificationMessage.show();
