@@ -1,5 +1,4 @@
 export default class NotificationMessage {
-    //class NotificationMessage {
     static lastShownComponent;
     constructor(message, { duration, type } = {}) {
         this.message = message || '';
@@ -48,7 +47,3 @@ export default class NotificationMessage {
     }
 
 }
-
-//notificationMessage = new NotificationMessage('Пивко всем за мой счет');
-//document.body.append(notificationMessage.element);
-//notificationMessage.show();
