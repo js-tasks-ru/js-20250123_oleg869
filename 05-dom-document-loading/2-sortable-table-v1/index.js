@@ -1,5 +1,5 @@
-export default class SortableTable {
-//class SortableTable {
+//export default class SortableTable {
+class SortableTable {
   constructor(headerConfig = [{ id, title, sotrable, sortType }],
     data = [{ id, title, price, sales }]) {
     this.data = data;
@@ -13,60 +13,80 @@ export default class SortableTable {
     return element.firstElementChild;
   }
 
-  putProductInTable() {
-    const getProductsFromData = this.data.map(({id, title, price, sales}) =>
-      `
-      <a href="/products/${id}" class="sortable-table__row">
-        <div class="sortable-table__cell">
-          <img class="sortable-table-image" alt="Image" src="https://imgur.com/gallery/sr-71-photos-t2Gn6K2.jpg"></div>
-        <div class="sortable-table__cell">${title}</div>
+  sort(fieldForSort, order) {
+    const sortInfo = this.headerConfig.find(elem => elem.id === fieldForSort);
+    console.log(sortInfo);
+    const sortType = sortInfo.sortType;
+    const sortAsc = (a, b) => {
+      return sortType === "string" ?
+        a[fieldForSort].localeCompare(b[fieldForSort], ['ru', 'en']) :
+        a[fieldForSort] - b[fieldForSort];
+    };
+    const sortDesc = (a, b) => {
+      return sortType === "string" ?
+        b[fieldForSort].localeCompare(a[fieldForSort], ['ru', 'en']) :
+        b[fieldForSort] - a[fieldForSort];
+    };
+    this.data.sort(order === "asc" ? sortAsc : sortDesc);
+    //this.element.querySelector('.sortable-table__body').innerHTML = this.updateSortedProducts();
+  }
 
-        <div class="sortable-table__cell">17</div>
-        <div class="sortable-table__cell">${price}</div>
-        <div class="sortable-table__cell">${sales}</div>
-      </a>    
+  updateSortedProducts() {
+
+  }
+
+  putProductInTable() {
+    const getProductsFromData = this.data.map(({ id, title, price, sales }) =>
       `
+        <a href="/products/${id}" class="sortable-table__row">
+          <div class="sortable-table__cell">
+            <img class="sortable-table-image" alt="Image" src=""></div>
+          <div class="sortable-table__cell">${title}</div>
+  
+          <div class="sortable-table__cell">17</div>
+          <div class="sortable-table__cell">${price}</div>
+          <div class="sortable-table__cell">${sales}</div>
+        </a>    
+        `
     ).join('');
-    return getProductsFromData;
   }
 
   getTemplate() {
     return `
-      <div data-element="productsContainer" class="products-list__container">
-        <div class="sortable-table">
-
-          <div data-element="header" class="sortable-table__header sortable-table__row">
-            <div class="sortable-table__cell" data-id="images" data-sortable="false">
-              <span>Image</span>
+        <div data-element="productsContainer" class="products-list__container">
+          <div class="sortable-table">
+  
+            <div data-element="header" class="sortable-table__header sortable-table__row">
+              <div class="sortable-table__cell" data-id="images" data-sortable="false">
+                <span>Image</span>
+              </div>
+              <div class="sortable-table__cell" data-id="title" data-sortable="true">
+                <span>Name</span>
+                <span data-element="arrow" class="sortable-table__sort-arrow">
+                  <span class="sort-arrow"></span>
+                </span>
+              </div>
+              <div class="sortable-table__cell" data-id="quantity" data-sortable="true">
+                <span>Quantity</span>
+              </div>
+              <div class="sortable-table__cell" data-id="price" data-sortable="true">
+                <span>Price</span>
+              </div>
+              <div class="sortable-table__cell" data-id="sales" data-sortable="true">
+                <span>Sales</span>
+              </div>
+            </div>            
+  
+            <div data-element="body" class="sortable-table__body">
+  
+              ${this.putProductInTable()}
+  
             </div>
-            <div class="sortable-table__cell" data-id="title" data-sortable="true">
-              <span>Name</span>
-              <span data-element="arrow" class="sortable-table__sort-arrow">
-                <span class="sort-arrow"></span>
-              </span>
-            </div>
-            <div class="sortable-table__cell" data-id="quantity" data-sortable="true">
-              <span>Quantity</span>
-            </div>
-            <div class="sortable-table__cell" data-id="price" data-sortable="true">
-              <span>Price</span>
-            </div>
-            <div class="sortable-table__cell" data-id="sales" data-sortable="true">
-              <span>Sales</span>
-            </div>
-          </div>            
-
-          <div data-element="body" class="sortable-table__body">
-
-            ${this.putProductInTable()}
-
+  
           </div>
-
         </div>
-      </div>
-    `;
+      `;
   }
-
 
   destroy() {
     this.remove();
@@ -76,7 +96,7 @@ export default class SortableTable {
     this.element.remove();
   }
 }
-/*
+
 const data = [
   {
     'id': 'soska-(pustyshka)-nuk-10729357',
@@ -134,5 +154,10 @@ const header = [
 
 sortable = new SortableTable(header, data);
 document.body.append(sortable.element);
+console.log(sortable.data);
+console.log('before sort');
+const field = 'title';
 
-*/
+sortable.sort(field, 'desc');
+
+console.log(sortable.data);
