@@ -8,6 +8,7 @@ class Tooltip {
     this.element = document.createElement('div');
     this.element.className = 'tooltip';
     document.addEventListener('pointerover', this.mouseCursorOver);
+    document.addEventListener('pointerout', this.mouserCursorOut);
   }
 
   mouseCursorOver = (event) => {
@@ -15,10 +16,18 @@ class Tooltip {
     if(!pointObject) return;
     this.render(pointObject.dataset.tooltip);
   };
+  
+  mouserCursorOut = (event) => {
+    this.remove();
+  };
 
   render(text){
     this.element.textContent = text;
     document.body.append(this.element);
+  }
+
+  remove(){
+    this.element.remove();
   }
 
   destroy() {
@@ -26,6 +35,6 @@ class Tooltip {
   }
 }
 
-//export default Tooltip;
-const tooltip = new Tooltip();
-tooltip.initialize();
+export default Tooltip;
+//const tooltip = new Tooltip();
+//tooltip.initialize();
