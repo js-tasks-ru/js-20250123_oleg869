@@ -4,7 +4,7 @@ export default class NotificationMessage {
         this.message = message || '';
         this.duration = duration || 0;
         this.type = type || '';
-        this.element = this.setElement();
+        this.element = this.setElement();        
     }
 
     setElement() {
@@ -19,8 +19,8 @@ export default class NotificationMessage {
         }
         NotificationMessage.lastShownComponent = this;
         if (inputHTMLElement) { inputHTMLElement.innerHTML = this.getTemplate(); }
-        setTimeout(() => {
-            this.remove();
+        this.timerId = setTimeout(() => {
+            this.destroy();
         }, this.duration);
     }
 
@@ -40,6 +40,7 @@ export default class NotificationMessage {
 
     destroy() {
         this.remove();
+        clearTimeout(this.timerId);
     }
 
     remove() {
