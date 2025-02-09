@@ -57,11 +57,7 @@ export default class SortableTable {
   getSubElements() {
     const elements = this.element.querySelectorAll('[data-element="body"]');
     return [...elements].reduce((acc, subElement) => {
-      console.log('acc ', acc);
-      console.log('acc sub elem ', acc[subElement.dataset.element]);
-      console.log('subElem ', subElement);
       acc[subElement.dataset.element] = subElement;
-      console.log('acc reform ', acc);
       return acc;
     }, {});
   }
@@ -88,62 +84,3 @@ export default class SortableTable {
     this.element.remove();
   }
 }
-
-/*
-const data = [
-  {
-    'id': 'soska-(pustyshka)-nuk-10729357',
-    'title': 'Соска (пустышка) NUK 10729357',
-    'price': 3,
-    'sales': 14
-  },
-  {
-    'id': 'tv-tyuner-d-color--dc1301hd',
-    'title': 'ТВ тюнер D-COLOR  DC1301HD',
-    'price': 15,
-    'sales': 13
-  },
-  {
-    'id': 'detskiy-velosiped-lexus-trike-racer-trike',
-    'title': 'Детский велосипед Lexus Trike Racer Trike',
-    'price': 53,
-    'sales': 11
-  },
-  {
-    'id': 'soska-(pustyshka)-philips-scf182/12',
-    'title': 'Соска (пустышка) Philips SCF182/12',
-    'price': 9,
-    'sales': 11
-  },
-  {
-    'id': 'powerbank-akkumulyator-hiper-sp20000',
-    'title': 'Powerbank аккумулятор Hiper SP20000',
-    'price': 30,
-    'sales': 11
-  },
-];
-
- const header = [
-  {
-    id: 'title',
-    title: 'Name',
-    sortable: true,
-    sortType: 'string'
-  },
-  {
-    id: 'price',
-    title: 'Price',
-    sortable: true,
-    sortType: 'number'
-  },
-  {
-    id: 'sales',
-    title: 'Sales',
-    sortable: true,
-    sortType: 'number'
-  },
-];
-
-sortableTable = new SortableTable(header, data);
-document.body.append(sortableTable.element);
-*/
