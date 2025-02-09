@@ -1,4 +1,4 @@
-class SortableTable {
+export default class SortableTable {
   constructor(
     headerConfig = [], 
     data = []
@@ -6,6 +6,7 @@ class SortableTable {
     this.data = data;
     this.headerConfig = headerConfig;
     this.element = this.createElement();
+    this.subElements = this.getSubElements();
   }
 
   createElement() {
@@ -31,7 +32,6 @@ class SortableTable {
             const tableContent = (id === 'images') ?
              `<img class="sortable-table-image" alt="Image" src="${product[id]}">`
               : product[id];
-            console.log(tableContent);
             return `<div class="sortable-table__cell">${tableContent}</div>`;
           }).join('')}
         </a>
@@ -54,9 +54,34 @@ class SortableTable {
     `;
   }
 
+  getSubElements() {
+    const elements = this.element.querySelectorAll('[data-element="body"]');
+    return [...elements].reduce((acc, subElement) => {
+      console.log('acc ', acc);
+      console.log('acc sub elem ', acc[subElement.dataset.element]);
+      console.log('subElem ', subElement);
+      acc[subElement.dataset.element] = subElement;
+      console.log('acc reform ', acc);
+      return acc;
+    }, {});
+  }
+
   sort(field, order){
     const sortableHeader = this.headerConfig.find(elem => elem.id == field);
     if (!sortableHeader || !sortableHeader.sortable) return;
+    const sortType = sortableHeader.sortType;
+    const sortAsc = (a, b) => {
+      return sortType === "string" ?
+        a[field].localeCompare(b[field], 'ru', 'en') :
+        a[field] - b[field];
+    };
+    const sortDesc = (a, b) => {
+      return sortType === "string" ?
+        b[field].localeCompare(a[field], 'ru', 'en') :
+        b[field] - a[field];
+    };
+    this.data.sort(order === "asc" ? sortAsc : sortDesc);
+    this.subElements.body.innerHTML = this.getTableBody();
   }
 
   destroy() {
@@ -64,7 +89,7 @@ class SortableTable {
   }
 }
 
-
+/*
 const data = [
   {
     'id': 'soska-(pustyshka)-nuk-10729357',
@@ -121,3 +146,4 @@ const data = [
 
 sortableTable = new SortableTable(header, data);
 document.body.append(sortableTable.element);
+*/
