@@ -54,6 +54,11 @@ class SortableTable {
     `;
   }
 
+  sort(field, order){
+    const sortableHeader = this.headerConfig.find(elem => elem.id == field);
+    if (!sortableHeader || !sortableHeader.sortable) return;
+  }
+
   destroy() {
     this.element.remove();
   }
