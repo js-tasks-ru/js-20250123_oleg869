@@ -1,6 +1,9 @@
 class Tooltip {
-  static lastShownTooltip;
+  static tooltipInstance;
   constructor(){
+    if(Tooltip.tooltipInstance) {
+      return Tooltip.tooltipInstance;
+    } Tooltip.tooltipInstance = this;
     this.element = null;
 
   }
