@@ -7,13 +7,13 @@ class Tooltip {
   initialize () {
     this.element = document.createElement('div');
     this.element.className = 'tooltip';
-
+    document.addEventListener('pointerover', this.mouseCursorOver);
   }
 
   mouseCursorOver = (event) => {
     const pointObject = event.target.closest('[data-tooltip]');
     if(!pointObject) return;
-
+    this.render(pointObject.dataset.tooltip);
   };
 
   render(text){
@@ -21,13 +21,11 @@ class Tooltip {
     document.body.append(this.element);
   }
 
-  getTemplate(){
-
-  }
-
   destroy() {
     this.remove();
   }
 }
 
-export default Tooltip;
+//export default Tooltip;
+const tooltip = new Tooltip();
+tooltip.initialize();
