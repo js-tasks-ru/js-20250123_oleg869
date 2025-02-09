@@ -14,6 +14,10 @@ export default class SortableTable {
     return element.firstElementChild;
   }
 
+  getTableHeder(){
+    
+  }
+
   getTemplate() {
     return `
       <div data-element="productsContainer" class="products-list__container">
@@ -22,7 +26,7 @@ export default class SortableTable {
             ${this.getTableHeader()}
           </div>
           <div data-element="body" class="sortable-table__body">
-            ${this.getTableBody()}
+            
           </div>
         </div>
       </div>
