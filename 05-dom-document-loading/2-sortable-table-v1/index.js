@@ -1,6 +1,6 @@
 export default class SortableTable {
   constructor(
-    headerConfig = [], 
+    headerConfig = [],
     data = []
   ) {
     this.data = data;
@@ -15,27 +15,31 @@ export default class SortableTable {
     return element.firstElementChild;
   }
 
-  getTableHeder(){
+  getTableHeder() {
     return this.headerConfig.map(({ id, title, sortable }) => {
       return `
         <div class="sortable-table__cell" data-id="${id}" data-sortable="${sortable}">
-                      <span>${title}</span>
+            <span>${title}</span>
+            ${sortable ? `<span data-element="arrow" class="sortable-table__sort-arrow">
+              <span class="sort-arrow"></span>
+              </span>
+              ` : ''}
         </div>
-      `;}).join('');
+      `;
+    }).join('');
   }
-
-  getTableBody(){
+  getTableBody() {
     return this.data.map(product => {
       return `
-        <a href="/products/${product.id}" class="sortable-table__row">
-          ${this.headerConfig.map(({ id }) => {
-            const tableContent = (id === 'images') ?
-             `<img class="sortable-table-image" alt="Image" src="${product[id]}">`
-              : product[id];
-            return `<div class="sortable-table__cell">${tableContent}</div>`;
-          }).join('')}
-        </a>
-      `;
+              <a href="/products/${product.id}" class="sortable-table__row">
+                ${this.headerConfig.map(({ id, template }) => {
+                const tableContent = product[id];
+                return template ?
+                  `${template(tableContent)}` :
+                  `<div class="sortable-table__cell">${tableContent}</div>`;
+              }).join('')}
+              </a>
+          `;
     }).join('');
   }
 
@@ -62,7 +66,7 @@ export default class SortableTable {
     }, {});
   }
 
-  sort(field, order){
+  sort(field, order) {
     const sortableHeader = this.headerConfig.find(elem => elem.id == field);
     if (!sortableHeader || !sortableHeader.sortable) return;
     const sortType = sortableHeader.sortType;
