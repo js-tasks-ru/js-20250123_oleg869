@@ -1,4 +1,4 @@
-export default class SortableTableClassic {
+export default class SortableTable {
   constructor(
     headerConfig = [],
     data = []
@@ -20,10 +20,7 @@ export default class SortableTableClassic {
       return `
         <div class="sortable-table__cell" data-id="${id}" data-sortable="${sortable}">
             <span>${title}</span>
-            ${sortable ? `<span data-element="arrow" class="sortable-table__sort-arrow">
-              <span class="sort-arrow"></span>
-              </span>
-              ` : ''}
+            
         </div>
       `;
     }).join('');
