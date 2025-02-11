@@ -7,28 +7,52 @@ export default class SortableTable extends SortableTableV1 {
   } = {}) {
     super(headersConfig, data);
     this.sorted = sorted;
+    this.isSortLocally = true;
+    this.headerElements = this.getHeaderElements();
     this.createArrowElement();
     this.createListener();
   }
 
   createArrowElement() {
     const div = document.createElement('div');
-    div.innerHTML = 
-    ` <span data-element="arrow" class="sortable-table__sort-arrow">
+    div.innerHTML =
+      ` <span data-element="arrow" class="sortable-table__sort-arrow">
         <span class="sort-arrow"></span>
       <span>
     `;
     this.arrowElement = div.firstElementChild;
   }
 
-
-
-  createListener(){
-    this.subElements.header.addEventListener('pointerdown', this.handleHeaderClick);
+  handleHeaderCellClick = (e) => {
+    
   }
 
-  destroyListener(){
-    this.subElements.header.destroyListener('pointerdown', this.handleHeaderClick);
+  sort(sortField, sortOrder) {
+    if (this.isSortLocally) {
+      super.sort(sortField, sortOrder);
+    } else {
+      this.sortOnServer();
+    }
+  }
+
+  getHeaderElements(){
+    const elements = this.element.querySelectorAll('.sortable-table__cell[data-sortable="true"]');
+    return elements;
+  }
+
+  sortOnServer(){}
+
+  createListener() {
+    this.headerElements.forEach(elem=> {elem.addEventListener('pointerdown', this.handleHeaderCellClick)});
+  }
+
+  destroyListener() {
+    this.headerElements.forEach(elem=> {elem.removeEventListener('pointerdown', this.handleHeaderCellClick)});
+  }
+
+  destroy(){
+    super.destroy();
+    this.destroyListener()
   }
 
 }
