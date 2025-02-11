@@ -14,13 +14,13 @@ export default class SortableTable extends SortableTableV1 {
   }
 
   createArrowElement() {
-    const div = document.createElement('div');
-    div.innerHTML =
+    const elem = document.createElement('div');
+    elem.innerHTML =
       ` <span data-element="arrow" class="sortable-table__sort-arrow">
         <span class="sort-arrow"></span>
       <span>
     `;
-    this.arrowElement = div.firstElementChild;
+    this.arrowElement = elem.firstElementChild;
   }
 
   handleHeaderCellClick = (e) => {
@@ -35,15 +35,20 @@ export default class SortableTable extends SortableTableV1 {
   sort(sortField, sortOrder) {
     if (this.isSortLocally) {
       super.sort(sortField, sortOrder);
-      this.headerElements.forEach()
+      this.headerElements.forEach(elem=> {
+        elem.removeAttribute('data-order');
+        if (elem.dataset.id === sortField) {
+          elem.dataset.order = sortOrder;
+          elem.append(this.arrowElement);
+        }
+      });
     } else {
       this.sortOnServer();
     }
   }
 
   getHeaderElements(){
-    const elements = this.element.querySelectorAll('.sortable-table__cell[data-sortable="true"]');
-    return elements;
+    return this.subElements.querySelectorAll('.sortable-table__cell[data-sortable="true"]');    
   }
 
   sortOnServer(){}

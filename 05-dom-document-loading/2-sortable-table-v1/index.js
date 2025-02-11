@@ -15,7 +15,7 @@ export default class SortableTable {
     return element.firstElementChild;
   }
 
-  getTableHeder() {
+  getTableHeader() {
     return this.headerConfig.map(({ id, title, sortable }) => {
       return `
         <div class="sortable-table__cell" data-id="${id}" data-sortable="${sortable}">
@@ -45,7 +45,7 @@ export default class SortableTable {
       <div data-element="productsContainer" class="products-list__container">
         <div class="sortable-table">
           <div data-element="header" class="sortable-table__header sortable-table__row">
-            ${this.getTableHeder()}
+            ${this.getTableHeader()}
           </div>
           <div data-element="body" class="sortable-table__body">
             ${this.getTableBody()}
