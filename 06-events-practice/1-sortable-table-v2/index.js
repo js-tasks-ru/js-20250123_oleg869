@@ -24,12 +24,18 @@ export default class SortableTable extends SortableTableV1 {
   }
 
   handleHeaderCellClick = (e) => {
-    
+    const headerColumn = e.target.closest('.sortable-table__cell[data-sortable="true"]');
+    if (!headerColumn) return;
+
+    const { id, order } = headerColumn.dataset;
+    const newOrder = order === 'asc' ? 'desc' : 'asc';
+    this.sort(id, newOrder);
   }
 
   sort(sortField, sortOrder) {
     if (this.isSortLocally) {
       super.sort(sortField, sortOrder);
+      this.headerElements.forEach()
     } else {
       this.sortOnServer();
     }

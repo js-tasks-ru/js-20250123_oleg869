@@ -56,7 +56,7 @@ export default class SortableTable {
   }
 
   getSubElements() {
-    const elements = this.element.querySelectorAll('[data-element="body"]');
+    const elements = this.element.querySelectorAll('[data-element]');
     return [...elements].reduce((acc, subElement) => {
       acc[subElement.dataset.element] = subElement;
       return acc;
