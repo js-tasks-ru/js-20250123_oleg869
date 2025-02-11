@@ -6,6 +6,6 @@ export default class SortableTable extends  SortableTableClassic{
     data = [],
     sorted = {}
   } = {}) {
-
+    super(headersConfig, data);
   }
 }

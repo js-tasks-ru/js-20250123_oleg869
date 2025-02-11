@@ -10,17 +10,26 @@ class Tooltip {
   initialize () {
     this.element = document.createElement('div');
     this.element.className = 'tooltip';
-    document.addEventListener('pointerover', this.mouseCursorOver);
-    document.addEventListener('pointerout', this.mouserCursorOut);
+    this.createListeners();
   }
 
-  mouseCursorOver = (event) => {
+  createListeners(){
+    document.addEventListener('pointerover', this.handleCursorOver);
+    document.addEventListener('pointerout', this.handleCursorOut);
+  }
+
+  destroyListeners(){
+    document.removeEventListener('pointerover', this.handleCursorOver);
+    document.removeEventListener('pointerout', this.handleCursorOut);
+  }
+
+  handleCursorOver = (event) => {
     const pointObject = event.target.closest('[data-tooltip]');
     if(!pointObject) return;
     this.render(pointObject.dataset.tooltip);
   };
   
-  mouserCursorOut = (event) => {
+  handleCursorOut = () => {
     this.remove();
   };
 
@@ -35,6 +44,7 @@ class Tooltip {
 
   destroy() {
     this.remove();
+    this.destroyListeners();
   }
 }
 
