@@ -1,7 +1,6 @@
-import {SortableTable as SortableTableClassic} from '../1-sortable-table-v2/index.js';
+import SortableTableClassic from '../../05-dom-document-loading/2-sortable-table-v1/index.js';
 
-
-export default class SortableTable extends  SortableTableClassic{
+export default class SortableTable extends SortableTableClassic{
   constructor(headersConfig, {
     data = [],
     sorted = {}
