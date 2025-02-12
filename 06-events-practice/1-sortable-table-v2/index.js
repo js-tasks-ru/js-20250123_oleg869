@@ -24,7 +24,7 @@ export default class SortableTable extends SortableTableV1 {
     this.arrowElement = elem.firstElementChild;
   }
 
-  initInfoFromSort(){
+  initInfoFromSort() {
     const header = this.subElements.header.querySelector(`[data-id="${this.sorted.id}"]`);
     this.sort(this.sorted.id, this.sorted.order);
     header.dataset.order = this.sorted.order;
@@ -35,7 +35,7 @@ export default class SortableTable extends SortableTableV1 {
     const cellElement = e.target.closest('.sortable-table__cell[data-sortable="true"]');
     if (!cellElement) return;
     const { id, order } = cellElement.dataset;
-    const sortOrder = order === 'asc' ? 'desc' : 'asc';
+    const sortOrder = order === 'desc' ? 'asc' : 'desc';
     this.sort(id, sortOrder);
     cellElement.dataset.order = sortOrder;
     cellElement.append(this.arrowElement);
