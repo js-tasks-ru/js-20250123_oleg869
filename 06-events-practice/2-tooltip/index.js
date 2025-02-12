@@ -49,5 +49,3 @@ class Tooltip {
 }
 
 export default Tooltip;
-//const tooltip = new Tooltip();
-//tooltip.initialize();

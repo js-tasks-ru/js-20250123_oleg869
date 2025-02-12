@@ -19,8 +19,7 @@ export default class SortableTable {
     return this.headerConfig.map(({ id, title, sortable }) => {
       return `
         <div class="sortable-table__cell" data-id="${id}" data-sortable="${sortable}">
-            <span>${title}</span>
-            
+            <span>${title}</span>            
         </div>
       `;
     }).join('');
@@ -32,7 +31,7 @@ export default class SortableTable {
                 ${this.headerConfig.map(({ id, template }) => {
                 const tableContent = product[id];
                 return template ?
-                  `${template(tableContent)}` :
+                  template(tableContent) :
                   `<div class="sortable-table__cell">${tableContent}</div>`;
               }).join('')}
               </a>
