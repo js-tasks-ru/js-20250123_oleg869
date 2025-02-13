@@ -15,15 +15,11 @@ export default class SortableTable {
     return element.firstElementChild;
   }
 
-  getTableHeder() {
+  getTableHeader() {
     return this.headerConfig.map(({ id, title, sortable }) => {
       return `
         <div class="sortable-table__cell" data-id="${id}" data-sortable="${sortable}">
-            <span>${title}</span>
-            ${sortable ? `<span data-element="arrow" class="sortable-table__sort-arrow">
-              <span class="sort-arrow"></span>
-              </span>
-              ` : ''}
+            <span>${title}</span>            
         </div>
       `;
     }).join('');
@@ -35,7 +31,7 @@ export default class SortableTable {
                 ${this.headerConfig.map(({ id, template }) => {
                 const tableContent = product[id];
                 return template ?
-                  `${template(tableContent)}` :
+                  template(tableContent) :
                   `<div class="sortable-table__cell">${tableContent}</div>`;
               }).join('')}
               </a>
@@ -48,7 +44,7 @@ export default class SortableTable {
       <div data-element="productsContainer" class="products-list__container">
         <div class="sortable-table">
           <div data-element="header" class="sortable-table__header sortable-table__row">
-            ${this.getTableHeder()}
+            ${this.getTableHeader()}
           </div>
           <div data-element="body" class="sortable-table__body">
             ${this.getTableBody()}
@@ -59,7 +55,7 @@ export default class SortableTable {
   }
 
   getSubElements() {
-    const elements = this.element.querySelectorAll('[data-element="body"]');
+    const elements = this.element.querySelectorAll('[data-element]');
     return [...elements].reduce((acc, subElement) => {
       acc[subElement.dataset.element] = subElement;
       return acc;
