@@ -1,17 +1,22 @@
-export default class DoubleSlider {
+//export default class DoubleSlider {
+    class DoubleSlider {
     constructor({
         min,
         max,
-        formatValue = value => value,
+        formatValue = value =>'$' + value,
         selected = {}
     } = {}) {
         this.min = min;
-        this.max = max;
-        this.element = this.setElement();
+        this.max = max;        
         this.formatValue = formatValue;
+        this.selected = {
+            from: selected.from ?? min,
+            to: selected.to ?? max
+        };
+        this.element = this.setElement();
         
     }
-
+    
     setElement() {
         const element = document.createElement('div');
         element.className = 'range-slider';
@@ -20,7 +25,7 @@ export default class DoubleSlider {
 
     getTemplate() {
         return `            
-                <span data-element="from">${this.presentValue}</span>
+                <span data-element="from">${this.formatValue(this.selected.from)}</span>
                 <div class="range-slider__inner">
                     <span class="range-slider__progress" style="left: 30%; right: 30%">
                     </span>
@@ -29,10 +34,10 @@ export default class DoubleSlider {
                     <span class="range-slider__thumb-right" style="right: 30%>
                     </span>
                 <div>
-                <span data-element="to">${this.presentValue}</span>            
+                <span data-element="to">${this.formatValue(this.selected.to)}</span>            
         `;
     }
-
+    /*
     createListener(){
         const {thumbLeft, thumbRight} = this.getThumbs();
         thumbLeft.addEventListener('pointerdown', this.handlePointerDown);
@@ -48,5 +53,12 @@ export default class DoubleSlider {
             thumbLeft: this.element.querySelector('.range-slider__thumb-left'),
             thumbRight: this.element.querySelector('.range-slider__thumb-right')
         }
-    }
+    }*/
 }
+
+const slider = new DoubleSlider({
+    min: 0,
+    max: 100,
+    selected: {from: 10, to: 40}
+});
+console.log(slider.min, slider.max, slider.selected);
