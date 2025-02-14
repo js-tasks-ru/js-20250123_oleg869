@@ -21,6 +21,7 @@
         const element = document.createElement('div');
         element.className = 'range-slider';
         element.innerHTML = this.getTemplate();
+        return element;
     }
 
     getTemplate() {
@@ -31,9 +32,9 @@
                     </span>
                     <span class="range-slider__thumb-left" style="left: 30%">
                     </span>
-                    <span class="range-slider__thumb-right" style="right: 30%>
+                    <span class="range-slider__thumb-right" style="right: 30%">
                     </span>
-                <div>
+                </div>
                 <span data-element="to">${this.formatValue(this.selected.to)}</span>            
         `;
     }
@@ -59,6 +60,7 @@
 const slider = new DoubleSlider({
     min: 0,
     max: 100,
-    selected: {from: 10, to: 40}
+    selected: {from: 10, to: 80}
 });
 console.log(slider.min, slider.max, slider.selected);
+document.body.append(slider.element);
