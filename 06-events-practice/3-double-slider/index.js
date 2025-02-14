@@ -70,9 +70,16 @@ class DoubleSlider {
     handleSliderDown(e){
         const slider = e.target;
         console.log(slider);
-        const movingSlider = slider.className === 'range-slider__thumb-left' ? 'leftSlider' : 'rightSlider';
+        this.movingSlider = slider.className === 'range-slider__thumb-left' ? 'leftSlider' : 'rightSlider';
         console.log(movingSlider);
-        
+        document.body.addEventListener('pointermove', this.handleSliderMove);
+    }
+
+    handleSliderMove(e){
+        e.preventDefault();
+        const coordinates = this.element.getBoundingClientRect();
+        console.log(coordinates);
+        if(this.movingSlider === "")
     }
 
 }
