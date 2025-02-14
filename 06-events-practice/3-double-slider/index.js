@@ -1,20 +1,21 @@
 //export default class DoubleSlider {
 class DoubleSlider {
+    subElements = {};
     constructor({
         min,
         max,
         formatValue = value => '$' + value,
         selected = {}
     } = {}) {
-        this.min = min;
-        this.max = max;
+        this.min = min ?? 100;
+        this.max = max ?? 200;
         this.formatValue = formatValue;
         this.selected = {
             from: selected.from ?? min,
             to: selected.to ?? max
         };
         this.element = this.setElement();
-        this.thumbElements = this.getThumbValues();
+        this.selectSubElements();
         this.createListener();
     }
 
@@ -26,8 +27,8 @@ class DoubleSlider {
     }
 
     getTemplate() {
-        const leftProgress = this.toPercent(this.selected.from);
-        const rightProgress = this.toPercent(this.selected.to);
+        const leftProgress = this.getLeftPercent();
+        const rightProgress = this.getRightPercent();
 
         return `            
                 <span data-element="from">${this.formatValue(this.selected.from)}</span>
@@ -43,52 +44,26 @@ class DoubleSlider {
         `;
     }
 
-    toPercent(value, tot){
+    getLeftPercent(){
         const total = this.max - this.min;
-        return Math.round(value / total) * 100;
+        const value = this.from - this.min;
+        return Math.round(value / total * 100) ;
     }
 
-    getThumbValues() {
-        const thumbElements = this.element.querySelectorAll('[data-element]');
-        return {
-            from: thumbElements[0],
-            to: thumbElements[1]
-        };
+    getRightPercent(){
+        const total = this.max - this.min;
+        const value = this.from - this.min;
+        return Math.round(value / total * 100) ;
     }
 
-    getSliders(){        
-        return {
-            leftSlider : this.element.querySelector('.range-slider__thumb-left'),
-            rightSlider: this.element.querySelector('.range-slider__thumb-right')
-        };
-        
-    }
-    
-    createListener(){
-        const {leftSlider, rightSlider} = this.getSliders();
-        leftSlider.addEventListener('pointerdown', this.handleSliderDown);
-        rightSlider.addEventListener('pointerdown', this.handleSliderDown);
-    }
-    destroyListener(){
-        const {leftSlider, rightSlider} = this.getSliders();
-        leftSlider.addEventListener('pointerdown', this.handleSliderDown);
-        rightSlider.addEventListener('pointerdown', this.handleSliderDown);
+    selectSubElements() {
+        this.element.querySelectorAll('[data-element]').forEach(elem => {
+            this.subElements[elem.dataset.element] = elem;
+        });
     }
 
-    handleSliderDown(e){
-        const slider = e.target;
-        console.log(slider);
-        this.movingSlider = slider.className === 'range-slider__thumb-left' ? 'leftSlider' : 'rightSlider';
-        console.log(movingSlider);
-        document.body.addEventListener('pointermove', this.handleSliderMove);
-    }
+    createListener(){};
 
-    handleSliderMove(e){
-        e.preventDefault();
-        const coordinates = this.element.getBoundingClientRect();
-        console.log(coordinates);
-        if(this.movingSlider === "")
-    }
 
 }
 
