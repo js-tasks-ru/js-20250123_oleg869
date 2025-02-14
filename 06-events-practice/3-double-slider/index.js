@@ -26,18 +26,26 @@ class DoubleSlider {
     }
 
     getTemplate() {
+        const leftProgress = this.toPercent(this.selected.from);
+        const rightProgress = this.toPercent(this.selected.to);
+
         return `            
                 <span data-element="from">${this.formatValue(this.selected.from)}</span>
                 <div class="range-slider__inner">
-                    <span class="range-slider__progress" style="left: 30%; right: 30%">
+                    <span class="range-slider__progress" style="left: ${leftProgress}%; right: ${rightProgress}%">
                     </span>
-                    <span class="range-slider__thumb-left" style="left: 30%">
+                    <span class="range-slider__thumb-left" style="left: ${leftProgress}%">
                     </span>
-                    <span class="range-slider__thumb-right" style="right: 30%">
+                    <span class="range-slider__thumb-right" style="right: ${rightProgress}%">
                     </span>
                 </div>
                 <span data-element="to">${this.formatValue(this.selected.to)}</span>            
         `;
+    }
+
+    toPercent(value, tot){
+        const total = this.max - this.min;
+        return Math.round(value / total) * 100;
     }
 
     getThumbValues() {
