@@ -48,10 +48,10 @@ class DoubleSlider {
         };
     }
 
-    getSliders(){
+    getSliders(){        
         return {
-            leftSlider : this.element.querySelector('range-slider__thumb-left'),
-            rightSlider: this.element.querySelector('range-slider__thumb-right')
+            leftSlider : this.element.querySelector('.range-slider__thumb-left'),
+            rightSlider: this.element.querySelector('.range-slider__thumb-right')
         };
         
     }
@@ -62,8 +62,9 @@ class DoubleSlider {
         rightSlider.addEventListener('pointerdown', this.handlePointerDown);
     }
     destroyListener(){
-        thumbLeft.addEventListener('pointerdown', this.handlePointerDown);
-        thumbRight.addEventListener('pointerdown', this.handlePointerDown);
+        const {leftSlider, rightSlider} = this.getSliders();
+        leftSlider.addEventListener('pointerdown', this.handlePointerDown);
+        rightSlider.addEventListener('pointerdown', this.handlePointerDown);
     }
 
 }
