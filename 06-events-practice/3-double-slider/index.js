@@ -15,6 +15,7 @@ class DoubleSlider {
         };
         this.element = this.setElement();
         this.thumbElements = this.getThumbValues();
+        this.createListener();
     }
 
     setElement() {
@@ -46,23 +47,25 @@ class DoubleSlider {
             to: thumbElements[1]
         };
     }
-    /*
+
+    getSliders(){
+        return {
+            leftSlider : this.element.querySelector('range-slider__thumb-left'),
+            rightSlider: this.element.querySelector('range-slider__thumb-right')
+        };
+        
+    }
+    
     createListener(){
-        const {thumbLeft, thumbRight} = this.getThumbs();
-        thumbLeft.addEventListener('pointerdown', this.handlePointerDown);
-        thumbRight.addEventListener('pointerdown', this.handlePointerDown);
+        const {leftSlider, rightSlider} = this.getSliders();
+        leftSlider.addEventListener('pointerdown', this.handlePointerDown);
+        rightSlider.addEventListener('pointerdown', this.handlePointerDown);
     }
     destroyListener(){
         thumbLeft.addEventListener('pointerdown', this.handlePointerDown);
         thumbRight.addEventListener('pointerdown', this.handlePointerDown);
     }
 
-    getThumbs() {
-        return {
-            thumbLeft: this.element.querySelector('.range-slider__thumb-left'),
-            thumbRight: this.element.querySelector('.range-slider__thumb-right')
-        }
-    }*/
 }
 
 const slider = new DoubleSlider({
