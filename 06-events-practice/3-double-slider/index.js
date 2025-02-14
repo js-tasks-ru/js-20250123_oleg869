@@ -58,13 +58,21 @@ class DoubleSlider {
     
     createListener(){
         const {leftSlider, rightSlider} = this.getSliders();
-        leftSlider.addEventListener('pointerdown', this.handlePointerDown);
-        rightSlider.addEventListener('pointerdown', this.handlePointerDown);
+        leftSlider.addEventListener('pointerdown', this.handleSliderDown);
+        rightSlider.addEventListener('pointerdown', this.handleSliderDown);
     }
     destroyListener(){
         const {leftSlider, rightSlider} = this.getSliders();
-        leftSlider.addEventListener('pointerdown', this.handlePointerDown);
-        rightSlider.addEventListener('pointerdown', this.handlePointerDown);
+        leftSlider.addEventListener('pointerdown', this.handleSliderDown);
+        rightSlider.addEventListener('pointerdown', this.handleSliderDown);
+    }
+
+    handleSliderDown(e){
+        const slider = e.target;
+        console.log(slider);
+        const movingSlider = slider.className === 'range-slider__thumb-left' ? 'leftSlider' : 'rightSlider';
+        console.log(movingSlider);
+        
     }
 
 }
