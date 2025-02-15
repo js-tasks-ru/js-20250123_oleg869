@@ -33,11 +33,11 @@ class DoubleSlider {
         return `            
                 <span data-element="from">${this.formatValue(this.selected.from)}</span>
                 <div class="range-slider__inner">
-                    <span class="range-slider__progress" style="left: ${leftProgress}%; right: ${rightProgress}%">
+                    <span class="thumbProgress" style="left: ${leftProgress}%; right: ${rightProgress}%">
                     </span>
-                    <span class="range-slider__thumb-left" style="left: ${leftProgress}%">
+                    <span class="thumbLeft" style="left: ${leftProgress}%">
                     </span>
-                    <span class="range-slider__thumb-right" style="right: ${rightProgress}%">
+                    <span class="thumbRight" style="right: ${rightProgress}%">
                     </span>
                 </div>
                 <span data-element="to">${this.formatValue(this.selected.to)}</span>            
@@ -62,9 +62,14 @@ class DoubleSlider {
         });
     }
 
-    createListener(){};
+    createListener(){
+        this.subElements.thumbLeft.addEventListener('pointerdown', handleThumbLeftPointerdown);
+        this.subElements.thumbRight.addEventListener('pointerdown', handleThumbRightPointerdown);
+    };
 
-
+    handleThumbLeftPointerdown = () =>{
+        
+    }
 }
 
 const slider = new DoubleSlider({
