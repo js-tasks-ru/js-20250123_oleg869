@@ -63,7 +63,6 @@ export default class SortableTable {
   }
 
   sort(field, order) {
-    console.log(this.data);
     const sortableHeader = this.headerConfig.find(elem => elem.id == field);
     if (!sortableHeader || !sortableHeader.sortable) return;
     const sortType = sortableHeader.sortType;
