@@ -59,10 +59,6 @@ export default class ColumnChart extends ColumnChartV1 {
             const currentDate = new Date(date + "T00:00:00Z");
             const formatedCurrentDate = formatDateToCompare(currentDate);
             if (formatedCurrentDate >= formatedFrom && formatedCurrentDate <= formatedTo) {
-
-                console.log(`currentDate = ${formatedCurrentDate} from = ${formatedFrom} currentDate >= from ${formatedCurrentDate >= formatedFrom} to = ${formatedTo} currentDate <= to ${formatedCurrentDate <= formatedTo}`);
-
-
                 result[date] = data[date];
             }
             return result;
