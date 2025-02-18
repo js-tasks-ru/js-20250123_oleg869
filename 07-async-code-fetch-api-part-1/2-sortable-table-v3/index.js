@@ -10,7 +10,16 @@ export default class SortableTable extends SortableTableV2 {
     this.sorted.order = sorted.order;
     this.pageSize = pageSize;
     this.render(sorted.id, sorted.order);
+    this.createScrollListener();
   }
+
+  handleWindowScroll = async () => {
+    const { scrollY, innerHeight } = window;
+    const { scrollHeight } = document.documentElement;
+    
+    console.log(`scrollY, innerHeight,  scrollHeight`, scrollY, innerHeight, scrollHeight);
+
+  };
 
   async loadData(sortField, sortOrder) {
     try {
@@ -35,6 +44,11 @@ export default class SortableTable extends SortableTableV2 {
     }
 
   }
+
+  createScrollListener(){
+    window.addEventListener('scroll', this.handleWindowScroll);
+  }
+
   async render() {
     this.data = await this.loadData(this.sorted.id, this.sorted.order);
     this.subElements.body.innerHTML = this.getTableBody();
@@ -43,5 +57,10 @@ export default class SortableTable extends SortableTableV2 {
   async sortOnServer(id, order) {
     this.data = await this.loadData(id, order);
     this.subElements.body.innerHTML = this.getTableBody();
+  }
+
+  destroy(){
+    super.destroy();
+    window.removeEventListener('scroll', this.handleWindowScroll);
   }
 }
