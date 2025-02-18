@@ -53,10 +53,10 @@ export default class SortableTable extends SortableTableV2 {
     }
 
   }
-
+//// надо еще допилить возможность сортировки на серваке прогруженных
   async loadNextStack() {
     this.startPosition = this.pageSize + 1;
-    this.pageSize = this.pageSize * 2;
+    this.pageSize = this.pageSize + 30;
     try {
       const newData = await this.loadData(this.sorted.id, this.sorted.order);
       if (newData.length === 0) {
