@@ -2,7 +2,7 @@ import fetchJson from './utils/fetch-json.js';
 import SortableTableV2 from '../../06-events-practice/1-sortable-table-v2/index.js';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class SortableTable extends SortableTableV2 {
-  constructor(headersConfig, { sorted = {}, url, isSortLocally = false, pageSize = 30} = {}) {
+  constructor(headersConfig, { sorted = {}, url, isSortLocally = false, pageSize = 30, scrolledRecords = 10} = {}) {
     super(headersConfig);
     this.isSortLocally = isSortLocally;
     this.url = new URL(url, BACKEND_URL);
@@ -10,14 +10,22 @@ export default class SortableTable extends SortableTableV2 {
     this.sorted.order = sorted.order;
     this.pageSize = pageSize;
     this.render(sorted.id, sorted.order);
+    this.handleScroll;
+    this.scrolledRecords = scrolledRecords;
     this.createScrollListener();
   }
 
   handleWindowScroll = async () => {
     const { scrollY, innerHeight } = window;
     const { scrollHeight } = document.documentElement;
-    
-    console.log(`scrollY, innerHeight,  scrollHeight`, scrollY, innerHeight, scrollHeight);
+    console.log(`scrollY=${scrollY} innerHeight=${innerHeight} scrollHeight=${scrollHeight}`);
+    console.log(`scrollY + innerHeight = ${scrollY + innerHeight}`);
+    console.log(`scrollHeight - this.scrolledRecords = ${scrollHeight - this.scrolledRecords}`);
+    if(scrollY + innerHeight >= scrollHeight){
+      console.log('limit achieved');
+      //await this.loadNextData();
+    }
+
 
   };
 
