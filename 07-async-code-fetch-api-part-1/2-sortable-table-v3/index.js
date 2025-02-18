@@ -2,42 +2,39 @@ import fetchJson from './utils/fetch-json.js';
 import SortableTableV2 from '../../06-events-practice/1-sortable-table-v2/index.js';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class SortableTable extends SortableTableV2 {
-  constructor(headersConfig, { sorted = {}, url, isSortLocally = false, pageSize = 30, scrolledRecords = 10 } = {}) {
+  constructor(headersConfig, { sorted = {}, url, isSortLocally = false, batchSize = 30} = {}) {
     super(headersConfig);
     this.isSortLocally = isSortLocally;
     this.url = new URL(url, BACKEND_URL);
     this.sorted.id = sorted.id;
     this.sorted.order = sorted.order;
-    this.pageSize = pageSize;
-    this.startPosition = 0;
+    this.batchSize = batchSize;
     this.hasMoreData = true;
+    this.iteration = 1;
     this.render(sorted.id, sorted.order);
     this.handleScroll;
-    this.scrolledRecords = scrolledRecords;
     this.createScrollListener();
   }
 
   handleWindowScroll = async () => {
+    if(!this.hasMoreData) return;
     const { scrollY, innerHeight } = window;
     const { scrollHeight } = document.documentElement;
-    console.log(`scrollY=${scrollY} innerHeight=${innerHeight} scrollHeight=${scrollHeight}`);
-    console.log(`scrollY + innerHeight = ${scrollY + innerHeight}`);
-    console.log(`scrollHeight - this.scrolledRecords = ${scrollHeight - this.scrolledRecords}`);
     if (scrollY + innerHeight >= scrollHeight) {
       await this.loadNextStack();
     }
-
-
   };
 
-  async loadData(sortField, sortOrder) {
+  async loadData(sortField, sortOrder, iteration) {
     try {
+      const startPosition = (iteration) ? (iteration - 1) * this.batchSize : 0;
+      const endPosition = (!iteration) ? this.iteration * this.batchSize : this.batchSize * iteration;
       const reUsedURL = new URL(this.url.href);
       reUsedURL.searchParams.set('_embed', 'subcategory.category');
       reUsedURL.searchParams.set('_sort', sortField);
       reUsedURL.searchParams.set('_order', sortOrder);
-      reUsedURL.searchParams.set('_start', this.startPosition);
-      reUsedURL.searchParams.set('_end', this.pageSize);
+      reUsedURL.searchParams.set('_start', startPosition);
+      reUsedURL.searchParams.set('_end', endPosition);
 
       const response = await fetch(reUsedURL.href);
 
@@ -53,12 +50,11 @@ export default class SortableTable extends SortableTableV2 {
     }
 
   }
-//// надо еще допилить возможность сортировки на серваке прогруженных
+  //// надо еще допилить возможность сортировки на серваке прогруженных
   async loadNextStack() {
-    this.startPosition = this.pageSize + 1;
-    this.pageSize = this.pageSize + 30;
+    this.iteration++;
     try {
-      const newData = await this.loadData(this.sorted.id, this.sorted.order);
+      const newData = await this.loadData(this.sorted.id, this.sorted.order, this.iteration);
       if (newData.length === 0) {
         this.hasMoreData = false;
         return;
@@ -69,6 +65,7 @@ export default class SortableTable extends SortableTableV2 {
 
     catch (e) {
       console.error('Error loading more data', e);
+      this.iteration--;
     }
 
   }
@@ -78,13 +75,14 @@ export default class SortableTable extends SortableTableV2 {
   }
 
   async render() {
+    if(this.iteration === 1 && this.hasMoreData)
     this.data = await this.loadData(this.sorted.id, this.sorted.order);
     this.subElements.body.innerHTML = this.getTableBody();
   }
 
   async sortOnServer(id, order) {
     this.data = await this.loadData(id, order);
-    this.subElements.body.innerHTML = this.getTableBody();
+    await this.render();
   }
 
   destroy() {
