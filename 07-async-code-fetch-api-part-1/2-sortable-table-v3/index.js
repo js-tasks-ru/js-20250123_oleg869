@@ -12,6 +12,7 @@ export default class SortableTable extends SortableTableV2 {
     this.hasMoreData = true;
     this.iteration = 1;
     this.render(sorted.id, sorted.order);
+    this.createScrollListener();
   }
 
   handleWindowScroll = async () => {
@@ -68,14 +69,14 @@ export default class SortableTable extends SortableTableV2 {
 
   }
 
-  createListener() {
+  /*createListener() {
     super.createListener();
     window.addEventListener('scroll', this.handleWindowScroll);
-  }
-
-  /*createScrollListener() {
-    window.addEventListener('scroll', this.handleWindowScroll);
   }*/
+
+  createScrollListener() {
+    window.addEventListener('scroll', this.handleWindowScroll);
+  }
 
   async render() {
     if (this.iteration === 1 && this.hasMoreData)
