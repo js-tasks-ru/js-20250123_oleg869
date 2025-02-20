@@ -2,7 +2,7 @@ import fetchJson from './utils/fetch-json.js';
 import SortableTableV2 from '../../06-events-practice/1-sortable-table-v2/index.js';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class SortableTable extends SortableTableV2 {
-  constructor(headersConfig, { sorted = {}, url, isSortLocally = false, batchSize = 30} = {}) {
+  constructor(headersConfig, { sorted = {}, url, isSortLocally = false, batchSize = 30 } = {}) {
     super(headersConfig);
     this.isSortLocally = isSortLocally;
     this.url = new URL(url, BACKEND_URL);
@@ -12,12 +12,10 @@ export default class SortableTable extends SortableTableV2 {
     this.hasMoreData = true;
     this.iteration = 1;
     this.render(sorted.id, sorted.order);
-    this.handleScroll;
-    this.createScrollListener();
   }
 
   handleWindowScroll = async () => {
-    if(!this.hasMoreData) return;
+    if (!this.hasMoreData) return;
     const { scrollY, innerHeight } = window;
     const { scrollHeight } = document.documentElement;
     if (scrollY + innerHeight >= scrollHeight) {
@@ -50,7 +48,7 @@ export default class SortableTable extends SortableTableV2 {
     }
 
   }
-  //// надо еще допилить возможность сортировки на серваке прогруженных
+  
   async loadNextStack() {
     this.iteration++;
     try {
@@ -70,13 +68,18 @@ export default class SortableTable extends SortableTableV2 {
 
   }
 
-  createScrollListener() {
+  createListener() {
+    super.createListener();
     window.addEventListener('scroll', this.handleWindowScroll);
   }
 
+  /*createScrollListener() {
+    window.addEventListener('scroll', this.handleWindowScroll);
+  }*/
+
   async render() {
-    if(this.iteration === 1 && this.hasMoreData)
-    this.data = await this.loadData(this.sorted.id, this.sorted.order);
+    if (this.iteration === 1 && this.hasMoreData)
+      this.data = await this.loadData(this.sorted.id, this.sorted.order);
     this.subElements.body.innerHTML = this.getTableBody();
   }
 
