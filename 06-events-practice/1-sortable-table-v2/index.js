@@ -25,8 +25,16 @@ export default class SortableTable extends SortableTableV1 {
   }
 
   initInfoFromSort() {
-    const header = this.subElements.header.querySelector(`[data-id="${this.sorted.id}"]`);
-    this.sort(this.sorted.id, this.sorted.order);
+    
+    let header = this.subElements.header.querySelector(`[data-id="${this.sorted.id}"]`);
+
+    if (!header) {
+      const sortableHeader = this.headerConfig.find(item => item.sortable);
+      this.sorted.id = sortableHeader?.id;
+      header = this.subElements.header.querySelector(`[data-id="${this.sorted.id}"]`);
+    }
+
+    if(this.data) this.sort(this.sorted.id, this.sorted.order);
     header.dataset.order = this.sorted.order;
     header.append(this.arrowElement);
   }
@@ -43,10 +51,14 @@ export default class SortableTable extends SortableTableV1 {
 
   sort(sortField, sortOrder) {
     if (this.isSortLocally) {
-      super.sort(sortField, sortOrder);
+      this.sortOnClient(sortField, sortOrder);
     } else {
-      this.sortOnServer();
+      this.sortOnServer(sortField, sortOrder);
     }
+  }
+
+  sortOnClient(id, order) {
+    super.sort(id, order);
   }
 
   getHeaderElements() {
