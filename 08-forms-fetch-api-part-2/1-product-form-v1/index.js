@@ -236,6 +236,8 @@ export default class ProductForm {
         bubbles: true
       }));
 
+      const sendImageToImgur = await this.sendToImgur();
+
     }
 
     catch (error) {
@@ -243,7 +245,6 @@ export default class ProductForm {
     }
 
     console.log(product);
-
   }
 
   getImageStack() {
@@ -251,6 +252,10 @@ export default class ProductForm {
       url: image.querySelector('input[name="url"]').value,
       source: image.querySelector('input[name="source"]').value,
     }));
+  }
+
+  sendToImgur(){
+    const images = this.subElements.imageListContainer.querySelectorAll
   }
 
   removeEventListener() {
