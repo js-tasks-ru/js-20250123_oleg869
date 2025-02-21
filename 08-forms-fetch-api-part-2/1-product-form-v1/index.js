@@ -10,6 +10,7 @@ export default class ProductForm {
   subElements = {};
   categories;
   productForm;
+  imgurUrl = 'https://imgur.com/';
   defaultFormData = {
     title: '',
     description: '',
@@ -21,8 +22,6 @@ export default class ProductForm {
   };
   constructor(productId) {
     this.productId = productId;
-
-    //this.render();
   }
 
   createElement() {
@@ -88,6 +87,11 @@ export default class ProductForm {
           ${this.getImageTemplate()}
           ${this.getCategoryListTemplate()}   
           ${this.getPriceDiscountQuantityStatus()}
+          <div class="form-buttons">
+            <button type="submit" name="save" class="button-primary-outline">
+              Сохранить товар
+            </button>
+          </div>
           </form>
       </div>
     `
@@ -194,7 +198,18 @@ export default class ProductForm {
   `
   }
 
+  createEventListener(){
+    this.subElements.productForm.addEventListener('submit', this.handleOnSubmit);
+  }
 
+  handleOnSubmit = async event =>{
+    event.preventDefault();
+    sendDataToImgur();
+  }
+
+  removeEventListener(){
+    this.subElements.productForm.addEventListener('submit', this.handleOnSubmit);
+  }
 
   destroy() {
     this.element.remove();
