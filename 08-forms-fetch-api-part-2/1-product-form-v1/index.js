@@ -103,7 +103,7 @@ export default class ProductForm {
       <div class="form-group form-group__half_left">
         <fieldset>
           <label class="form-label">Название товара</label>
-          <input required="" type="text" name="title"
+          <input data-element="title" required="" type="text" name="title"
           class="form-control" placeholder="Название товара"
           value = ${this.productForm.title}>
         </fieldset>
@@ -140,7 +140,7 @@ export default class ProductForm {
             </button>
             </li>
           `).join('')}  
-      
+        </ul>
         <button type="button" name="uploadImage" class="button-primary-outline"><span>Загрузить</span></button>
       </div>
     `;
@@ -219,14 +219,17 @@ export default class ProductForm {
       status: this.subElements.status.value,
       subcategory: this.subElements.subcategory.value,
       title: this.subElements.title.value,
-
+      images: this.getImageStack()
     }
 
     console.log(product);
   }
 
   getImageStack() {
-
+    return Array.from(this.subElements.imageListContainer.querySelectorAll('li')).map(image => ({
+      url: image.querySelector('input[name="url"]').value,
+      source: image.querySelector('input[name="source"]').value,
+    }));
   }
 
   removeEventListener() {
