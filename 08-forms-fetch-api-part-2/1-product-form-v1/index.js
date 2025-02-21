@@ -87,7 +87,7 @@ export default class ProductForm {
           <label class="form-label">Фото</label>
           ${this.getImageTemplate()}
           ${this.getCategoryListTemplate()}   
-          ${this.getPriceAndDiscount()}
+          ${this.getPriceDiscountQuantityStatus()}
           </form>
       </div>
     `
@@ -106,7 +106,7 @@ export default class ProductForm {
     `
   }
 
-  getDescriptionTemplate(){
+  getDescriptionTemplate() {
     return `
       <div class="form-group form-group__wide">
         <label class="form-label">Описание</label>
@@ -115,10 +115,10 @@ export default class ProductForm {
          >${this.productForm.description}</textarea>
       </div>
     `;
-    
+
   }
 
-  getImageTemplate(){
+  getImageTemplate() {
     return `
       <div data-element="imageListContainer"><ul class="sortable-list">
         ${(this.productForm.images).map(image => `
@@ -163,7 +163,7 @@ export default class ProductForm {
       ).join('')).join('');
   }
 
-  getPriceAndDiscount(){
+  getPriceDiscountQuantityStatus() {
     return `
     <div class="form-group form-group__half_left form-group__two-col">
       <fieldset>
@@ -177,9 +177,23 @@ export default class ProductForm {
          value = ${this.productForm.discount}>
       </fieldset>
     </div>
+    <div class="form-group form-group__part-half">
+      <label class="form-label">Количество</label>
+      <input required="" type="number" class="form-control" name="quantity" placeholder="1"
+      value = ${this.productForm.quantity}>
+    </div>
+    <div class="form-group form-group__part-half">
+      <label class="form-label">Статус</label>
+      <select class="form-control" name="status">
+
+        <option value="1" ${this.productForm.status === 1 ? 'selected' : ''}>Активен</option>
+        <option value="0" ${this.productForm.status === 0 ? 'selected' : ''}>Неактивен</option>
+
+      </select>
+    </div>
   `
   }
-  
+
 
 
   destroy() {
