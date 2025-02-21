@@ -136,8 +136,9 @@ export default class ProductForm {
 
   getImageTemplate(){
     return `
-      <div data-element="imageListContainer"><ul class="sortable-list"><li class="products-edit__imagelist-item sortable-list__item" style="">
+      <div data-element="imageListContainer"><ul class="sortable-list">
         ${(this.productForm.images).map(image => `
+            <li class="products-edit__imagelist-item sortable-list__item" style="">
             <input type="hidden" name="url" value="${escapeHtml(image.url)}">
             <input type="hidden" name="source" value="${escapeHtml(image.source)}">
             <span>
@@ -148,7 +149,8 @@ export default class ProductForm {
             <button type="button">
               <img src="icon-trash.svg" data-delete-handle alt="delete">
             </button>
-          `)}  
+            </li>
+          `).join('')}  
       
         <button type="button" name="uploadImage" class="button-primary-outline"><span>Загрузить</span></button>
       </div>
