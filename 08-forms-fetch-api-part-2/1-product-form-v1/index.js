@@ -81,10 +81,7 @@ export default class ProductForm {
           
           ${this.getTitleTemplate()}
 
-          <div class="form-group form-group__wide">
-              <label class="form-label">Описание</label>
-              <textarea required="" class="form-control" name="description" data-element="productDescription" placeholder="Описание товара"></textarea>
-          </div>
+          ${this.getDescriptionTemplate()}
           
           <div class="form-group form-group__wide" data-element="sortable-list-container">
           <label class="form-label">Фото</label>
@@ -137,6 +134,19 @@ export default class ProductForm {
       </div>
     `
   }
+
+  getDescriptionTemplate(){
+    return `
+      <div class="form-group form-group__wide">
+        <label class="form-label">Описание</label>
+        <textarea required="" class="form-control" name="description" data-element="productDescription"
+         placeholder="Описание товара"
+         >${this.productForm.description}</textarea>
+      </div>
+    `;
+    
+  }
+  
 
   getCategoryListTemplate() {
     return `
