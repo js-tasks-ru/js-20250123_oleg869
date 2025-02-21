@@ -50,13 +50,16 @@ export default class ProductForm {
   }
 
   async loadProducts() {
-    const url = new URL('/api/rest/products', BACKEND_URL);
-    url.searchParams.set('_embed', 'subcategory.category');
-    url.searchParams.set('_sort', sortField);
-    url.searchParams.set('_order', sortOrder);
-    url.searchParams.set(0, startPosition);
-    url.searchParams.set(30, endPosition);
-    return await fetchJson(url);
+    try {
+      const url = new URL('/api/rest/products', BACKEND_URL);
+      url.searchParams.set('_embed', 'subcategory.category');
+      url.searchParams.set('_sort', 'title');
+      url.searchParams.set('_order', 'asc');
+      url.searchParams.set('_start', 0);
+      url.searchParams.set('_end', 30);
+      return await fetchJson(url);
+    }
+    catch (e) { console.error('Error loading product data', e) }
   }
 
   getTempalte() {
