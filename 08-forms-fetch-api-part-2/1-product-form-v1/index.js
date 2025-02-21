@@ -8,10 +8,12 @@ const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class ProductForm {
   element;
   subElements = {};
+  categories;
+  products;
   constructor(productId) {
     this.productId = productId;
 
-    this.createElement();
+    
     this.render();
   }
 
@@ -29,10 +31,8 @@ export default class ProductForm {
   }
 
   async render() {
-    const categories = await this.loadCategories();
-    const products = await this.loadProducts();
-
-    console.log(categories, products);
+    this.categories = await this.loadCategories();
+    this.products = await this.loadProducts();
 
     this.createElement();
     this.getSubElements();
@@ -76,10 +76,55 @@ export default class ProductForm {
               <label class="form-label">Описание</label>
               <textarea required="" class="form-control" name="description" data-element="productDescription" placeholder="Описание товара"></textarea>
           </div>
-         </form>
+          
+          <div class="form-group form-group__wide" data-element="sortable-list-container">
+          <label class="form-label">Фото</label>
+          <div data-element="imageListContainer"><ul class="sortable-list"><li class="products-edit__imagelist-item sortable-list__item" style="">
+            <input type="hidden" name="url" value="https://i.imgur.com/MWorX2R.jpg">
+            <input type="hidden" name="source" value="75462242_3746019958756848_838491213769211904_n.jpg">
+            <span>
+          <img src="icon-grab.svg" data-grab-handle="" alt="grab">
+          <img class="sortable-table__cell-img" alt="Image" src="https://i.imgur.com/MWorX2R.jpg">
+          <span>75462242_3746019958756848_838491213769211904_n.jpg</span>
+          </span>
+          <button type="button">
+            <img src="icon-trash.svg" data-delete-handle="" alt="delete">
+          </button></li></ul></div>
+          <button type="button" name="uploadImage" class="button-primary-outline"><span>Загрузить</span></button>
+          </div>
+         
+          <div class="form-group form-group__half_left">
+            <label class="form-label">Категория</label>
+            <select class="form-control" name="subcategory">              
+              ${this.getCategoryListTemplate()}
+            </select>
+        </div>
+         
+          </form>
       </div>
     `
   }
+
+  getCategoryListTemplate() {
+    return `
+    <div class="form-group form-group__half_left">
+            <label class="form-label">Категория</label>
+            <select class="form-control" name="subcategory">
+              ${this.getCategories()}
+            </select>
+          `;
+  }
+
+  getCategories() {
+    return this.categories.map(category => 
+      category.subcategories.map(subcategory => `
+        <option value = "${subcategory.id}"
+        ${subcategory.id === this.products.subcategory ? 'selected' : ''}>
+        </option>
+      `
+    ).join('')).join('');
+  }
+
 
   destroy() {
     this.element.remove();
