@@ -1,6 +1,7 @@
 import escapeHtml from './utils/escape-html.js';
 import fetchJson from './utils/fetch-json.js';
 //https://course-js.javascript.ru/api/rest/categories?_sort=weight&_refs=subcategory
+//https://course-js.javascript.ru/api/rest/products?_embed=subcategory.category&_sort=title&_order=asc&_start=0&_end=30
 const IMGUR_CLIENT_ID = '28aaa2e823b03b1';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
@@ -29,9 +30,9 @@ export default class ProductForm {
 
   async render() {
     const categories = await this.loadCategories();
-   
+    const products = await this.loadProducts();
 
-    console.log(categories);
+    console.log(categories, products);
 
     this.createElement();
     this.getSubElements();
@@ -45,8 +46,17 @@ export default class ProductForm {
       url.searchParams.set('_refs', 'subcategory');
       return await fetchJson(url);
     }
-    catch(e) {console.error('Error loading more data', e)}
+    catch (e) { console.error('Error loading categories data', e) }
+  }
 
+  async loadProducts() {
+    const url = new URL('/api/rest/products', BACKEND_URL);
+    url.searchParams.set('_embed', 'subcategory.category');
+    url.searchParams.set('_sort', sortField);
+    url.searchParams.set('_order', sortOrder);
+    url.searchParams.set(0, startPosition);
+    url.searchParams.set(30, endPosition);
+    return await fetchJson(url);
   }
 
   getTempalte() {
