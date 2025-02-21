@@ -66,6 +66,7 @@ export default class ProductForm {
       url.searchParams.set('_start', 0);
       url.searchParams.set('_end', 30);
       const response = await fetchJson(url);
+      console.log(response);
       const getProductFromServer = (products) => {
         return products.find(elem => elem.id === this.productId);
       };
@@ -77,27 +78,13 @@ export default class ProductForm {
   getTempalte() {
     return `
       <div class="product-form">
-         <form data-element="productForm" class="form-grid">
-          
+         <form data-element="productForm" class="form-grid">          
           ${this.getTitleTemplate()}
-
-          ${this.getDescriptionTemplate()}
-          
+          ${this.getDescriptionTemplate()}          
           <div class="form-group form-group__wide" data-element="sortable-list-container">
           <label class="form-label">Фото</label>
-          <div data-element="imageListContainer"><ul class="sortable-list"><li class="products-edit__imagelist-item sortable-list__item" style="">
-            <input type="hidden" name="url" value="https://i.imgur.com/MWorX2R.jpg">
-            <input type="hidden" name="source" value="75462242_3746019958756848_838491213769211904_n.jpg">
-            <span>
-          <img src="icon-grab.svg" data-grab-handle="" alt="grab">
-          <img class="sortable-table__cell-img" alt="Image" src="https://i.imgur.com/MWorX2R.jpg">
-          <span>75462242_3746019958756848_838491213769211904_n.jpg</span>
-          </span>
-          <button type="button">
-            <img src="icon-trash.svg" data-delete-handle="" alt="delete">
-          </button></li></ul></div>
-          <button type="button" name="uploadImage" class="button-primary-outline"><span>Загрузить</span></button>
-          </div>
+
+          ${this.getImageTemplate()}
          
           <div class="form-group form-group__half_left">
             <label class="form-label">Категория</label>
@@ -146,6 +133,28 @@ export default class ProductForm {
     `;
     
   }
+
+  getImageTemplate(){
+    return `
+      <div data-element="imageListContainer"><ul class="sortable-list"><li class="products-edit__imagelist-item sortable-list__item" style="">
+        ${(this.productForm.images).map(image => `
+            <input type="hidden" name="url" value="${escapeHtml(image.url)}">
+            <input type="hidden" name="source" value="${escapeHtml(image.source)}">
+            <span>
+              <img src="icon-grab.svg" data-grab-handle alt="grab">
+              <img class="sortable-table__cell-img" alt="Image" src="${escapeHtml(image.url)}">
+              <span>${escapeHtml(image.source)}</span>
+            </span>
+            <button type="button">
+              <img src="icon-trash.svg" data-delete-handle alt="delete">
+            </button>
+          `)}  
+      
+        <button type="button" name="uploadImage" class="button-primary-outline"><span>Загрузить</span></button>
+      </div>
+    `;
+  }
+  
   
 
   getCategoryListTemplate() {
