@@ -27,7 +27,7 @@ export default class ProductForm {
 
   createElement() {
     const element = document.createElement('div');
-    element.innerHTML = this.getTempalte();
+    element.innerHTML = this.getTemplate();
     this.element = element.firstElementChild;
   }
 
@@ -52,7 +52,9 @@ export default class ProductForm {
       const url = new URL('/api/rest/categories', BACKEND_URL);
       url.searchParams.set('_sort', 'weight');
       url.searchParams.set('_refs', 'subcategory');
-      return await fetchJson(url);
+      const response = await fetchJson(url);
+      console.log(response);
+      return response;
     }
     catch (e) { console.error('Error loading categories data', e) }
   }
@@ -75,7 +77,7 @@ export default class ProductForm {
     catch (e) { console.error('Error loading product data', e) }
   }
 
-  getTempalte() {
+  getTemplate() {
     return `
       <div class="product-form">
          <form data-element="productForm" class="form-grid">          
@@ -83,15 +85,8 @@ export default class ProductForm {
           ${this.getDescriptionTemplate()}          
           <div class="form-group form-group__wide" data-element="sortable-list-container">
           <label class="form-label">Фото</label>
-
           ${this.getImageTemplate()}
-         
-          <div class="form-group form-group__half_left">
-            <label class="form-label">Категория</label>
-            <select class="form-control" name="subcategory">              
-              ${this.getCategoryListTemplate()}
-            </select>
-          </div>
+          ${this.getCategoryListTemplate()}           
 
           <div class="form-group form-group__half_left form-group__two-col">
             <fieldset>
@@ -156,25 +151,22 @@ export default class ProductForm {
       </div>
     `;
   }
-  
-  
 
   getCategoryListTemplate() {
     return `
-    <div class="form-group form-group__half_left">
+          <div class="form-group form-group__half_left">
             <label class="form-label">Категория</label>
             <select class="form-control" name="subcategory">
               ${this.getCategories()}
             </select>
+          </div>
           `;
   }
 
   getCategories() {
     return this.categories.map(category =>
       category.subcategories.map(subcategory => `
-        <option value = "${subcategory.id}"
-        ${subcategory.id === this.productForm.subcategory ? 'selected' : ''}>
-        </option>
+        <option value = "${subcategory.id}">${category.title} > ${subcategory.title}</option>
       `
       ).join('')).join('');
   }
