@@ -9,12 +9,20 @@ export default class ProductForm {
   element;
   subElements = {};
   categories;
-  products;
+  productForm;
+  defaultFormData = {
+    title: '',
+    description: '',
+    quantity: 1,
+    subcategory: '',
+    status: 1,
+    price: 100,
+    discount: 0
+  };
   constructor(productId) {
     this.productId = productId;
 
-    
-    this.render();
+    //this.render();
   }
 
   createElement() {
@@ -32,8 +40,8 @@ export default class ProductForm {
 
   async render() {
     this.categories = await this.loadCategories();
-    this.products = await this.loadProducts();
-
+    this.productForm = this.productId ? await this.loadProducts() :
+      [this.defaultFormData];
     this.createElement();
     this.getSubElements();
     return this.element;
@@ -57,7 +65,11 @@ export default class ProductForm {
       url.searchParams.set('_order', 'asc');
       url.searchParams.set('_start', 0);
       url.searchParams.set('_end', 30);
-      return await fetchJson(url);
+      const response = await fetchJson(url);
+      const getProductFromServer = (products) => {
+        return products.find(elem => elem.id === this.productId);
+      };
+      return getProductFromServer(response);
     }
     catch (e) { console.error('Error loading product data', e) }
   }
@@ -66,12 +78,9 @@ export default class ProductForm {
     return `
       <div class="product-form">
          <form data-element="productForm" class="form-grid">
-          <div class="form-group form-group__half_left">
-            <fieldset>
-              <label class="form-label">Название товара</label>
-              <input required="" type="text" name="title" class="form-control" placeholder="Название товара">
-            </fieldset>
-          </div>
+          
+          ${this.getTitleTemplate()}
+
           <div class="form-group form-group__wide">
               <label class="form-label">Описание</label>
               <textarea required="" class="form-control" name="description" data-element="productDescription" placeholder="Описание товара"></textarea>
@@ -98,9 +107,33 @@ export default class ProductForm {
             <select class="form-control" name="subcategory">              
               ${this.getCategoryListTemplate()}
             </select>
-        </div>
+          </div>
+
+          <div class="form-group form-group__half_left form-group__two-col">
+            <fieldset>
+              <label class="form-label">Цена ($)</label>
+              <input required="" type="number" name="price" class="form-control" placeholder="100">
+            </fieldset>
+            <fieldset>
+              <label class="form-label">Скидка ($)</label>
+              <input required="" type="number" name="discount" class="form-control" placeholder="0">
+            </fieldset>
+          </div>
          
           </form>
+      </div>
+    `
+  }
+
+  getTitleTemplate() {
+    return `
+      <div class="form-group form-group__half_left">
+        <fieldset>
+          <label class="form-label">Название товара</label>
+          <input required="" type="text" name="title"
+          class="form-control" placeholder="Название товара"
+          value = ${this.productForm.title}>
+        </fieldset>
       </div>
     `
   }
@@ -116,13 +149,13 @@ export default class ProductForm {
   }
 
   getCategories() {
-    return this.categories.map(category => 
+    return this.categories.map(category =>
       category.subcategories.map(subcategory => `
         <option value = "${subcategory.id}"
-        ${subcategory.id === this.products.subcategory ? 'selected' : ''}>
+        ${subcategory.id === this.productForm.subcategory ? 'selected' : ''}>
         </option>
       `
-    ).join('')).join('');
+      ).join('')).join('');
   }
 
 
