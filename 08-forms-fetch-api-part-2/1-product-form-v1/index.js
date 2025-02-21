@@ -86,19 +86,8 @@ export default class ProductForm {
           <div class="form-group form-group__wide" data-element="sortable-list-container">
           <label class="form-label">Фото</label>
           ${this.getImageTemplate()}
-          ${this.getCategoryListTemplate()}           
-
-          <div class="form-group form-group__half_left form-group__two-col">
-            <fieldset>
-              <label class="form-label">Цена ($)</label>
-              <input required="" type="number" name="price" class="form-control" placeholder="100">
-            </fieldset>
-            <fieldset>
-              <label class="form-label">Скидка ($)</label>
-              <input required="" type="number" name="discount" class="form-control" placeholder="0">
-            </fieldset>
-          </div>
-         
+          ${this.getCategoryListTemplate()}   
+          ${this.getPriceAndDiscount()}
           </form>
       </div>
     `
@@ -166,10 +155,31 @@ export default class ProductForm {
   getCategories() {
     return this.categories.map(category =>
       category.subcategories.map(subcategory => `
-        <option value = "${subcategory.id}">${category.title} > ${subcategory.title}</option>
+        <option value = "${subcategory.id}"
+        ${this.productForm.subcategory.id === subcategory.id ? `selected = ${category.title}` : ''}>
+        ${category.title} > ${subcategory.title}
+        </option>
       `
       ).join('')).join('');
   }
+
+  getPriceAndDiscount(){
+    return `
+    <div class="form-group form-group__half_left form-group__two-col">
+      <fieldset>
+        <label class="form-label">Цена ($)</label>
+        <input required="" type="number" name="price" class="form-control" placeholder="100"
+         value = ${this.productForm.price}>
+      </fieldset>
+      <fieldset>
+        <label class="form-label">Скидка ($)</label>
+        <input required="" type="number" name="discount" class="form-control" placeholder="0"
+         value = ${this.productForm.discount}>
+      </fieldset>
+    </div>
+  `
+  }
+  
 
 
   destroy() {
