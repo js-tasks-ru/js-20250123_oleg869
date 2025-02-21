@@ -43,6 +43,7 @@ export default class ProductForm {
       [this.defaultFormData];
     this.createElement();
     this.getSubElements();
+    this.createEventListener();
     return this.element;
   }
 
@@ -173,22 +174,22 @@ export default class ProductForm {
       <fieldset>
         <label class="form-label">Цена ($)</label>
         <input required="" type="number" name="price" class="form-control" placeholder="100"
-         value = ${this.productForm.price}>
+         value = ${this.productForm.price} data-element="price">
       </fieldset>
       <fieldset>
         <label class="form-label">Скидка ($)</label>
         <input required="" type="number" name="discount" class="form-control" placeholder="0"
-         value = ${this.productForm.discount}>
+         value = ${this.productForm.discount} data-element="discount">
       </fieldset>
     </div>
     <div class="form-group form-group__part-half">
       <label class="form-label">Количество</label>
       <input required="" type="number" class="form-control" name="quantity" placeholder="1"
-      value = ${this.productForm.quantity}>
+      value = ${this.productForm.quantity} data-element="quantity">
     </div>
     <div class="form-group form-group__part-half">
       <label class="form-label">Статус</label>
-      <select class="form-control" name="status">
+      <select class="form-control" name="status" data-element="status">
 
         <option value="1" ${this.productForm.status === 1 ? 'selected' : ''}>Активен</option>
         <option value="0" ${this.productForm.status === 0 ? 'selected' : ''}>Неактивен</option>
@@ -204,7 +205,21 @@ export default class ProductForm {
 
   handleOnSubmit = async event =>{
     event.preventDefault();
-    sendDataToImgur();
+    console.log('send to imgur');
+    await this.sendProductDataToImgur();
+  }
+
+  async sendProductDataToImgur(){
+    const product = {
+      id: this.productId,
+      description: this.subElements.productDescription.value,
+      discount: this.subElements.discount.value,
+      price: this.subElements.price.value,
+      quantity: this.subElements.quantity.value,
+      status: this.subElements.status.value
+    }
+
+    console.log(product);
   }
 
   removeEventListener(){
