@@ -1,13 +1,12 @@
 import escapeHtml from './utils/escape-html.js';
 import fetchJson from './utils/fetch-json.js';
-
+//https://course-js.javascript.ru/api/rest/categories?_sort=weight&_refs=subcategory
 const IMGUR_CLIENT_ID = '28aaa2e823b03b1';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class ProductForm {
   element;
   subElements = {};
-
   constructor(productId) {
     this.productId = productId;
 
@@ -29,10 +28,25 @@ export default class ProductForm {
   }
 
   async render() {
+    const categories = await this.loadCategories();
+   
+
+    console.log(categories);
+
     this.createElement();
     this.getSubElements();
-
     return this.element;
+  }
+
+  async loadCategories() {
+    try {
+      const url = new URL('/api/rest/categories', BACKEND_URL);
+      url.searchParams.set('_sort', 'weight');
+      url.searchParams.set('_refs', 'subcategory');
+      return await fetchJson(url);
+    }
+    catch(e) {console.error('Error loading more data', e)}
+
   }
 
   getTempalte() {
@@ -52,5 +66,9 @@ export default class ProductForm {
          </form>
       </div>
     `
+  }
+
+  destroy() {
+    this.element.remove();
   }
 }
