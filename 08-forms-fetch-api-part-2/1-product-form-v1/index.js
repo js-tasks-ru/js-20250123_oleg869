@@ -150,7 +150,7 @@ export default class ProductForm {
     return `
           <div class="form-group form-group__half_left">
             <label class="form-label">Категория</label>
-            <select class="form-control" name="subcategory">
+            <select class="form-control" name="subcategory" data-element="subcategory">
               ${this.getCategories()}
             </select>
           </div>
@@ -199,30 +199,37 @@ export default class ProductForm {
   `
   }
 
-  createEventListener(){
+  createEventListener() {
     this.subElements.productForm.addEventListener('submit', this.handleOnSubmit);
   }
 
-  handleOnSubmit = async event =>{
+  handleOnSubmit = async event => {
     event.preventDefault();
     console.log('send to imgur');
     await this.sendProductDataToImgur();
   }
 
-  async sendProductDataToImgur(){
+  async sendProductDataToImgur() {
     const product = {
       id: this.productId,
       description: this.subElements.productDescription.value,
       discount: this.subElements.discount.value,
       price: this.subElements.price.value,
       quantity: this.subElements.quantity.value,
-      status: this.subElements.status.value
+      status: this.subElements.status.value,
+      subcategory: this.subElements.subcategory.value,
+      title: this.subElements.title.value,
+
     }
 
     console.log(product);
   }
 
-  removeEventListener(){
+  getImageStack() {
+
+  }
+
+  removeEventListener() {
     this.subElements.productForm.addEventListener('submit', this.handleOnSubmit);
   }
 
