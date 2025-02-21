@@ -206,10 +206,10 @@ export default class ProductForm {
   handleOnSubmit = async event => {
     event.preventDefault();
     console.log('send to imgur');
-    await this.sendProductDataToImgur();
+    await this.sendProductData();
   }
 
-  async sendProductDataToImgur() {
+  async sendProductData() {
     const product = {
       id: this.productId,
       description: this.subElements.productDescription.value,
@@ -222,7 +222,28 @@ export default class ProductForm {
       images: this.getImageStack()
     }
 
+    try {
+      const sendToJSCourse = await fetchJson(`${BACKEND_URL}/api/rest/products`, {
+        method: this.productId ? 'PATCH' : 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+      });
+      if(this.productId){
+        this.element.dispatchEvent(new CustomEvent('product-updated', {
+          bubbles: true
+        }));
+      } this.element.dispatchEvent(new CustomEvent('product-saved', {
+        bubbles: true
+      }));
+
+    }
+
+    catch (error) {
+      console.error('Ошибка при передаче данных: ', error);
+    }
+
     console.log(product);
+
   }
 
   getImageStack() {
