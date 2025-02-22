@@ -1,7 +1,5 @@
 import escapeHtml from './utils/escape-html.js';
 import fetchJson from './utils/fetch-json.js';
-//https://course-js.javascript.ru/api/rest/categories?_sort=weight&_refs=subcategory
-//https://course-js.javascript.ru/api/rest/products?_embed=subcategory.category&_sort=title&_order=asc&_start=0&_end=30
 const IMGUR_CLIENT_ID = '28aaa2e823b03b1';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
@@ -18,8 +16,7 @@ export default class ProductForm {
     subcategory: '',
     status: 1,
     price: 100,
-    discount: 0,
-    images: []
+    discount: 0
   };
   constructor(productId) {
     this.productId = productId;
@@ -68,7 +65,10 @@ export default class ProductForm {
       url.searchParams.set('_start', 0);
       url.searchParams.set('_end', 30);
       const response = await fetchJson(url);
-      return response[0];
+      const getProductFromServer = (products) => {
+        return products.find(elem => elem.id === this.productId);
+      };
+      return getProductFromServer(response);
     }
     catch (e) { console.error('Error loading product data', e) }
   }
@@ -99,9 +99,9 @@ export default class ProductForm {
       <div class="form-group form-group__half_left">
         <fieldset>
           <label class="form-label">Название товара</label>
-          <input id="title" data-element="title" required="" type="text" name="title"
+          <input data-element="title" required="" type="text" name="title"
           class="form-control" placeholder="Название товара"
-          value="${escapeHtml(this.productForm.title || '')}"
+          value = ${escapeHtml(this.productForm.title)}>
         </fieldset>
       </div>
     `
@@ -111,7 +111,7 @@ export default class ProductForm {
     return `
       <div class="form-group form-group__wide">
         <label class="form-label">Описание</label>
-        <textarea id="description" required="" class="form-control" name="description" data-element="productDescription"
+        <textarea required="" class="form-control" name="description" data-element="productDescription"
          placeholder="Описание товара"
          >${escapeHtml(this.productForm.description)}</textarea>
       </div>
@@ -146,8 +146,8 @@ export default class ProductForm {
     return `
           <div class="form-group form-group__half_left">
             <label class="form-label">Категория</label>
-            <select id="subcategory" class="form-control" name="subcategory" data-element="subcategory">
-              ${this.getCategories()}
+            <select class="form-control" name="subcategory" data-element="subcategory">
+              ${escapeHtml(this.getCategories())}
             </select>
           </div>
           `;
@@ -156,12 +156,12 @@ export default class ProductForm {
   getCategories() {
     return this.categories.map(category =>
       category.subcategories.map(subcategory => `
-        <option value = "${subcategory.id}"
-        ${this.productForm.subcategory.id === subcategory.id ? `selected = ${category.title}` : ''}>
+        <option value = "${escapeHtml(subcategory.id)}"
+        ${escapeHtml(this.productForm.subcategory.id) === escapeHtml(subcategory.id) ? `selected = ${escapeHtml(category.title)}` : ''}>
         ${escapeHtml(category.title)} > ${escapeHtml(subcategory.title)}
         </option>
       `
-      ).join('') ?? '').join('') ?? '';
+      ).join('')).join('');
   }
 
   getPriceDiscountQuantityStatus() {
@@ -169,26 +169,26 @@ export default class ProductForm {
     <div class="form-group form-group__half_left form-group__two-col">
       <fieldset>
         <label class="form-label">Цена ($)</label>
-        <input id="price" required="" type="number" name="price" class="form-control" placeholder="100"
-         value = ${this.productForm.price} data-element="price">
+        <input required="" type="number" name="price" class="form-control" placeholder="100"
+         value = ${escapeHtml(this.productForm.price)} data-element="price">
       </fieldset>
       <fieldset>
         <label class="form-label">Скидка ($)</label>
-        <input id="discount" required="" type="number" name="discount" class="form-control" placeholder="0"
-         value = ${this.productForm.discount} data-element="discount">
+        <input required="" type="number" name="discount" class="form-control" placeholder="0"
+         value = ${escapeHtml(this.productForm.discount)} data-element="discount">
       </fieldset>
     </div>
     <div class="form-group form-group__part-half">
       <label class="form-label">Количество</label>
-      <input id="quantity" required="" type="number" class="form-control" name="quantity" placeholder="1"
-      value = ${this.productForm.quantity} data-element="quantity">
+      <input required="" type="number" class="form-control" name="quantity" placeholder="1"
+      value = ${escapeHtml(this.productForm.quantity)} data-element="quantity">
     </div>
     <div class="form-group form-group__part-half">
       <label class="form-label">Статус</label>
-      <select id="status" class="form-control" name="status" data-element="status">
+      <select class="form-control" name="status" data-element="status">
 
-        <option value="1" ${this.productForm.status === 1 ? 'selected' : ''}>Активен</option>
-        <option value="0" ${this.productForm.status === 0 ? 'selected' : ''}>Неактивен</option>
+        <option value="1" ${escapeHtml(this.productForm.status) === 1 ? 'selected' : ''}>Активен</option>
+        <option value="0" ${escapeHtml(this.productForm.status) === 0 ? 'selected' : ''}>Неактивен</option>
 
       </select>
     </div>
@@ -201,10 +201,10 @@ export default class ProductForm {
 
   handleOnSubmit = async event => {
     event.preventDefault();
-    await this.save();
+    await this.sendProductData();
   }
 
-  async save() {
+  async sendProductData() {
     const product = {
       id: this.productId,
       description: this.subElements.productDescription.value,
@@ -231,13 +231,14 @@ export default class ProductForm {
         bubbles: true
       }));
 
-      //const sendImageToImgur = await this.sendToImgur();
+      const sendImageToImgur = await this.sendToImgur();
 
     }
 
     catch (error) {
       console.error('Ошибка при передаче данных: ', error);
     }
+
   }
 
   getImageStack() {
@@ -247,21 +248,15 @@ export default class ProductForm {
     }));
   }
 
-  /*sendToImgur(){
+  sendToImgur(){
     const images = this.subElements.imageListContainer.querySelectorAll
-  }*/
+  }
 
   removeEventListener() {
-    this.subElements.productForm.removeEventListener('submit', this.handleOnSubmit);
+    this.subElements.productForm.addEventListener('submit', this.handleOnSubmit);
   }
 
-  destroy(){
-    this.remove();
+  destroy() {
+    this.element.remove();
   }
-
-  remove() {
-    this.removeEventListener();
-    this.element.remove();    
-  }
-  
 }
