@@ -65,7 +65,7 @@ export default class RangePicker {
 
     }
 
-    renderCalendar(){
+    renderCalendar(){        
         const { selector } = this.subElements;
         selector.innerHTML = 
         `
@@ -75,9 +75,21 @@ export default class RangePicker {
     }
 
     renderMonthBody(date){
+        const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         const month = date.getMonth();
-
-        
+        console.log(monthNames[month]);
+       
+        return `
+                <div class="rangepicker__calendar">
+                    <div class="rangepicker__month-indicator">
+                    <time>${monthNames[month]}</time>
+                    </div>
+                    <div class="rangepicker__day-of-week">
+                    <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+                    </div>
+                    <div class="rangepicker__date-grid">days</div>
+                </div>
+            `;
     }
 
 
