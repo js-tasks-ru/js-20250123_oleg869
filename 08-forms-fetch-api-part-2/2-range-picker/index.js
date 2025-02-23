@@ -1,5 +1,5 @@
 export default class RangePicker {
-subElements = null;
+subElements = {};
 element = null;
 constructor({ from = new Date(), to = new Date() } = {}) {
     this.selected = { from, to };
@@ -7,10 +7,8 @@ constructor({ from = new Date(), to = new Date() } = {}) {
 }
 
 render(){
-    console.log('render');
     this.createElement();
-    this.setSubElements();
-    
+    this.setSubElements();    
 }
 
 createElement(){
@@ -20,14 +18,11 @@ createElement(){
 }
 
 setSubElements(){
-    const subElements = {};
-    const dataElements = this.element.querySelectorAll('[data-element');
+    const dataElements = this.element.querySelectorAll('[data-element]');
     for(const elem of dataElements){
         const name = elem.dataset.element;
-        //console.log(name);
-        subElements[name] = elem;
+        this.subElements[name] = elem;
     }
-    this.subElements = subElements;
 }
 
 getTemplate(){
@@ -42,6 +37,10 @@ getTemplate(){
     `;
 }
 
+createCalendarBody(){
+
+}
+
 toggleSelector(){
 
 }
@@ -49,6 +48,10 @@ toggleSelector(){
 
 renderCalendar(){
 
+}
+
+destroy(){
+    this.element.remove();
 }
 
 }

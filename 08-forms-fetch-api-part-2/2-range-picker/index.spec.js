@@ -24,7 +24,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
     rangePicker = null;
   });
 
-  it('should be rendered correctly', () => {
+  it.only('should be rendered correctly', () => {
     expect(rangePicker.element).toBeVisible();
     expect(rangePicker.element).toBeInTheDocument();
   });
