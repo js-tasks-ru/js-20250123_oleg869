@@ -46,10 +46,11 @@ export default class RangePicker {
 
     handleOpenCalendarOnClick() {
         this.element.classList.toggle('rangepicker_open');
+        if(this.element.classList.contains('rangepicker_open')) this.renderCalendar();
     }
 
     getTransformInputDate() {
-        const transformDate = date =>{
+        const transformDate = date => {
             const day = String(date.getDate()).padStart(2, '0');
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
@@ -60,10 +61,23 @@ export default class RangePicker {
         const toTransformed = this.subElements.to;
         fromTransformed.textContent = transformDate(this.selected.from);
         toTransformed.textContent = transformDate(this.selected.to);
-        //console.log(fromTransformed);
-        //console.log(this.subElements);
 
 
+    }
+
+    renderCalendar(){
+        const { selector } = this.subElements;
+        selector.innerHTML = 
+        `
+            <div class="rangepicker__selector-arrow"></div>
+            ${this.renderMonthBody(this.selected.from)}
+        `;
+    }
+
+    renderMonthBody(date){
+        const month = date.getMonth();
+
+        
     }
 
 

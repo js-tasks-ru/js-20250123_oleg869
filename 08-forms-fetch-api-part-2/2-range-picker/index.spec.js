@@ -74,7 +74,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
     expect(dateTo).toMatch('05.11.2019');
   });
 
-  it('should highlight selected \'from\' and \'to\' dates in calendar', () => {
+  it.only('should highlight selected \'from\' and \'to\' dates in calendar', () => {
     const rangePicker = new RangePicker({
       from: new Date(2019, 9, 12),
       to: new Date(2019, 10, 25)
