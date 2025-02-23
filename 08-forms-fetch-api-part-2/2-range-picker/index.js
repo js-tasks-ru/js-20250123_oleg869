@@ -1,32 +1,33 @@
 export default class RangePicker {
-subElements = {};
-element = null;
-constructor({ from = new Date(), to = new Date() } = {}) {
-    this.selected = { from, to };
-    this.render();
-}
-
-render(){
-    this.createElement();
-    this.setSubElements();    
-}
-
-createElement(){
-    const element = document.createElement('div');
-    element.innerHTML = this.getTemplate();
-    this.element = element.firstElementChild;
-}
-
-setSubElements(){
-    const dataElements = this.element.querySelectorAll('[data-element]');
-    for(const elem of dataElements){
-        const name = elem.dataset.element;
-        this.subElements[name] = elem;
+    subElements = {};
+    element = null;
+    constructor({ from = new Date(), to = new Date() } = {}) {
+        this.selected = { from, to };
+        this.render();
+        this.createOnClickOpenCalendarListener();
     }
-}
 
-getTemplate(){
-    return `
+    render() {
+        this.createElement();
+        this.setSubElements();
+    }
+
+    createElement() {
+        const element = document.createElement('div');
+        element.innerHTML = this.getTemplate();
+        this.element = element.firstElementChild;
+    }
+
+    setSubElements() {
+        const dataElements = this.element.querySelectorAll('[data-element]');
+        for (const elem of dataElements) {
+            const name = elem.dataset.element;
+            this.subElements[name] = elem;
+        }
+    }
+
+    getTemplate() {
+        return `
         <div class = "rangepicker">
             <div class = "rangepicker__input" data-element = "input">
                 <span data-element="from"></span>
@@ -35,23 +36,20 @@ getTemplate(){
             <div class = "rangepicker__selector" data-element="selector"></div>
         </div>
     `;
-}
+    }
 
-createCalendarBody(){
+    createOnClickOpenCalendarListener() {
+        const { input } = this.subElements;
+        input.addEventListener('click', () => this.handleOpenCalendarOnClick());
+    }
 
-}
-
-toggleSelector(){
-
-}
+    handleOpenCalendarOnClick(){
+        this.element.classList.toggle('rangepicker_open');
+    }
 
 
-renderCalendar(){
-
-}
-
-destroy(){
-    this.element.remove();
-}
+    destroy() {
+        this.element.remove();
+    }
 
 }
