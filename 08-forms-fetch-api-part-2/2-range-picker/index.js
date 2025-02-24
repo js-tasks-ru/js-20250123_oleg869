@@ -3,10 +3,12 @@ export default class RangePicker {
     element = null;
     constructor({ from = new Date(), to = new Date() } = {}) {
         this.selected = { from, to };
+        this.globalDateFrom = new Date(from);
         this.render();
         this.createOnClickOpenCalendarListener();
         this.getTransformInputDate();
         this.dateSeted = true;
+        
     }
 
     render() {
@@ -79,6 +81,8 @@ export default class RangePicker {
 
     renderCalendar() {
         const { selector } = this.subElements;
+        const secondMonth = new Date(this.globalDateFrom);
+        secondMonth.setMonth(secondMonth.getMonth() + 1);
         selector.innerHTML =
             `
             <div class="rangepicker__selector-arrow"></div>
