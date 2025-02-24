@@ -70,7 +70,8 @@ export default class RangePicker {
         selector.innerHTML = 
         `
             <div class="rangepicker__selector-arrow"></div>
-            ${this.renderMonthBody(this.selected.from)}
+            ${ this.renderMonthBody(this.selected.from) }
+            ${ this.renderMonthBody(this.selected.to) }
         `;
     }
 
@@ -78,16 +79,30 @@ export default class RangePicker {
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         const month = date.getMonth();
         console.log(monthNames[month]);
-       
+        const firstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDate();
+        const lastDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+
+        console.log(firstDayOfMonth(date));
+        console.log(lastDayOfMonth(date));
+       //определить их соответствие дню недели
         return `
                 <div class="rangepicker__calendar">
                     <div class="rangepicker__month-indicator">
                     <time>${monthNames[month]}</time>
                     </div>
                     <div class="rangepicker__day-of-week">
-                    <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div>Сб</div>
+                    <div>Вс</div>
                     </div>
                     <div class="rangepicker__date-grid">days</div>
+                    <div class="rangepicker__date-grid">
+                    
+                    </div>
                 </div>
             `;
     }
