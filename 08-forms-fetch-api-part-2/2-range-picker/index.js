@@ -6,6 +6,7 @@ export default class RangePicker {
         this.render();
         this.createOnClickOpenCalendarListener();
         this.getTransformInputDate();
+        this.dateSeted = true;
     }
 
     render() {
@@ -44,9 +45,22 @@ export default class RangePicker {
         input.addEventListener('click', () => this.handleOpenCalendarOnClick());
     }
 
+    createOnClickSellListener(){
+        const cell = this.element.querySelectorAll('.rangepicker__date-grid');
+        cell.forEach(grid => {
+            grid.addEventListener('click', this.handleOnCellClick);
+        });
+    }
+
     handleOpenCalendarOnClick() {
         this.element.classList.toggle('rangepicker_open');
         if (this.element.classList.contains('rangepicker_open')) this.renderCalendar();
+    }
+
+    handleOnCellClick = (event) => {
+        const target = event.target.closest('.rangepicker__cell');
+        const newDate = new Date(target.dataset.value);
+        this.onSellClick(newDate);
     }
 
     getTransformInputDate() {
@@ -71,6 +85,7 @@ export default class RangePicker {
             ${this.renderMonthBody(this.selected.from)}
             ${this.renderMonthBody(this.selected.to)}
         `;
+        requestAnimationFrame(() => this.createOnClickSellListener());
     }
 
     renderMonthBody(date) {
@@ -101,12 +116,10 @@ export default class RangePicker {
 
     renderDaysInCalendar(date) {
         let cores = '';
-        //const firstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDate();
         const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-        //const lastDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
         const firstDayWeek = firstDayOfMonth.getDay() === 0 ? 7 : firstDayOfMonth.getDay();
-        
+
         for (let i = 0; i < firstDayWeek; i++) {
             cores += '<button type="button" class="rangepicker__cell" data-value=""></button>';
         }
@@ -131,7 +144,31 @@ export default class RangePicker {
         } return 'rangepicker__cell rangepicker__selected-between'
     }
 
+    onSellClick(newDate){
+        console.log(newDate);
+        if(this.dateSeted){
+            this.selected = { from: newDate, to: null };
+            this.dateSeted = false;
+        } else {
+            this.selected.to = newDate;
+            this.dateSeted = true;
+        }
+        this.renderCalendar();        
+    }
+
+    destroyEventListeners(){
+        /*this.subElements.thumbLeft.removeEventListener(
+            "pointerdown",
+            this.handleThumbPointerdown
+        );
+        this.subElements.thumbRight.removeEventListener(
+            "pointerdown",
+            this.handleThumbPointerdown
+        );*/
+    }
+
     destroy() {
+
         this.element.remove();
     }
 
