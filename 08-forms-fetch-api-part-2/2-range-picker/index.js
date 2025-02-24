@@ -61,8 +61,6 @@ export default class RangePicker {
         const toTransformed = this.subElements.to;
         fromTransformed.textContent = transformDate(this.selected.from);
         toTransformed.textContent = transformDate(this.selected.to);
-
-
     }
 
     renderCalendar() {
@@ -79,9 +77,6 @@ export default class RangePicker {
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         const month = date.getMonth();
         console.log(monthNames[month]);
-
-
-        //определить их соответствие дню недели
         return `
                 <div class="rangepicker__calendar">
                     <div class="rangepicker__month-indicator">
@@ -111,12 +106,10 @@ export default class RangePicker {
         //const lastDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
         const firstDayWeek = firstDayOfMonth.getDay() === 0 ? 7 : firstDayOfMonth.getDay();
-
+        
         for (let i = 0; i < firstDayWeek; i++) {
             cores += '<button type="button" class="rangepicker__cell" data-value=""></button>';
         }
-
-        //нужно проверять каждую ячейку, входит ли она своей датой в промежуток
 
         for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
             const coreDate = new Date(date.getFullYear(), date.getMonth(), i);
@@ -124,27 +117,19 @@ export default class RangePicker {
 
             cores += `<button type="button" class="${this.getClassFromDate(coreDate)}" data-value="${transformedDate}">${i}</button>`
         }
-
-
         return cores;
     }
 
     getClassFromDate(coreDate) {
         if (coreDate.getTime() === this.selected.from.getTime()) {
-            console.log(coreDate, this.selected.from);
             return 'rangepicker__cell rangepicker__selected-from';
         } else if (coreDate.getTime() === this.selected.to.getTime()) {
             return 'rangepicker__cell rangepicker__selected-to';
         } else if (coreDate.getTime() < this.selected.from.getTime() ||
-         coreDate.getTime() > this.selected.to.getTime()) {
+            coreDate.getTime() > this.selected.to.getTime()) {
             return 'rangepicker__cell';
-        }  return 'rangepicker__cell rangepicker__selected-between'
+        } return 'rangepicker__cell rangepicker__selected-between'
     }
-
-    getCoreClassForRender() {
-
-    }
-
 
     destroy() {
         this.element.remove();

@@ -74,7 +74,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
     expect(dateTo).toMatch('05.11.2019');
   });
 
-  it.only('should highlight selected \'from\' and \'to\' dates in calendar', () => {
+  it('should highlight selected \'from\' and \'to\' dates in calendar', () => {
     const rangePicker = new RangePicker({
       from: new Date(2019, 9, 12),
       to: new Date(2019, 10, 25)
@@ -110,7 +110,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
     expect(selectedBetween.length).toEqual(totalDays - RANGE_BORDERS_COUNT);
   });
 
-  it('should clear highlighting of previous selection', () => {
+  it.only('should clear highlighting of previous selection', () => {
     const input = rangePicker.element.querySelector('.rangepicker__input');
 
     input.dispatchEvent(new MouseEvent('click', {
