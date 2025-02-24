@@ -86,8 +86,8 @@ export default class RangePicker {
         selector.innerHTML =
             `
             <div class="rangepicker__selector-arrow"></div>
-            ${this.renderMonthBody(this.selected.from)}
-            ${this.renderMonthBody(this.selected.to)}
+            ${this.renderMonthBody(this.globalDateFrom)}
+            ${this.renderMonthBody(secondMonth)}
         `;
         requestAnimationFrame(() => this.createOnClickSellListener());
     }
@@ -125,7 +125,7 @@ export default class RangePicker {
         const firstDayWeek = firstDayOfMonth.getDay() === 0 ? 7 : firstDayOfMonth.getDay();
 
         for (let i = 0; i < firstDayWeek; i++) {
-            cores += '<button type="button" class="rangepicker__cell" data-value=""></button>';
+            cores += '<button type="button" class="rangepicker__cell" disabled data-value=""></button>';
         }
 
         for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
