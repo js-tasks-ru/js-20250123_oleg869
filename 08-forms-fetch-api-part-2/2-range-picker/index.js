@@ -65,8 +65,9 @@ export default class RangePicker {
         this.onSellClick(newDate);
     }
 
-    getTransformInputDate() {
+    getTransformInputDate() {        
         const transformDate = date => {
+            if(!date) return;
             const day = String(date.getDate()).padStart(2, '0');
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
@@ -119,6 +120,10 @@ export default class RangePicker {
     }
 
     renderDaysInCalendar(date) {
+        //нужно учесть, когда from есть, to еще не пришел
+
+        if(this.selected.to === null){console.log('пробитие');}
+        if(!date){console.log('пробитие2');}
         let cores = '';
         const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
         const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -137,15 +142,15 @@ export default class RangePicker {
         return cores;
     }
 
-    getClassFromDate(coreDate) {
+    getClassFromDate(coreDate) { 
         if (coreDate.getTime() === this.selected.from.getTime()) {
             return 'rangepicker__cell rangepicker__selected-from';
-        } else if (coreDate.getTime() === this.selected.to.getTime()) {
+        } else if (this.selected.to && coreDate.getTime() === this.selected.to.getTime()) {
             return 'rangepicker__cell rangepicker__selected-to';
-        } else if (coreDate.getTime() < this.selected.from.getTime() ||
-            coreDate.getTime() > this.selected.to.getTime()) {
+        } else if (this.selected.to && (coreDate.getTime() < this.selected.from.getTime() ||
+            coreDate.getTime() > this.selected.to.getTime())) {
             return 'rangepicker__cell';
-        } return 'rangepicker__cell rangepicker__selected-between'
+        } else return 'rangepicker__cell rangepicker__selected-between'
     }
 
     onSellClick(newDate){
@@ -156,8 +161,17 @@ export default class RangePicker {
         } else {
             this.selected.to = newDate;
             this.dateSeted = true;
+
+            if(this.selected.from > this.selected.to) {
+                let tmp = this.selected.from;
+                this.selected.from = this.selected.to;
+                this.selected.to = tmp;
+            }
         }
-        this.renderCalendar();        
+
+
+        this.renderCalendar();
+        this.getTransformInputDate();      
     }
 
     destroyEventListeners(){
