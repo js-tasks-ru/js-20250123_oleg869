@@ -46,7 +46,7 @@ export default class RangePicker {
 
     handleOpenCalendarOnClick() {
         this.element.classList.toggle('rangepicker_open');
-        if(this.element.classList.contains('rangepicker_open')) this.renderCalendar();
+        if (this.element.classList.contains('rangepicker_open')) this.renderCalendar();
     }
 
     getTransformInputDate() {
@@ -65,26 +65,23 @@ export default class RangePicker {
 
     }
 
-    renderCalendar(){        
+    renderCalendar() {
         const { selector } = this.subElements;
-        selector.innerHTML = 
-        `
+        selector.innerHTML =
+            `
             <div class="rangepicker__selector-arrow"></div>
-            ${ this.renderMonthBody(this.selected.from) }
-            ${ this.renderMonthBody(this.selected.to) }
+            ${this.renderMonthBody(this.selected.from)}
+            ${this.renderMonthBody(this.selected.to)}
         `;
     }
 
-    renderMonthBody(date){
+    renderMonthBody(date) {
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         const month = date.getMonth();
         console.log(monthNames[month]);
-        const firstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDate();
-        const lastDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
-        console.log(firstDayOfMonth(date));
-        console.log(lastDayOfMonth(date));
-       //определить их соответствие дню недели
+
+        //определить их соответствие дню недели
         return `
                 <div class="rangepicker__calendar">
                     <div class="rangepicker__month-indicator">
@@ -99,12 +96,53 @@ export default class RangePicker {
                     <div>Сб</div>
                     <div>Вс</div>
                     </div>
-                    <div class="rangepicker__date-grid">days</div>
+                    <div class="rangepicker__date-grid"></div>
                     <div class="rangepicker__date-grid">
-                    
+                        ${this.renderDaysInCalendar(date)}
                     </div>
                 </div>
             `;
+    }
+
+    renderDaysInCalendar(date) {
+        let cores = '';
+        //const firstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDate();
+        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        //const lastDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        const firstDayWeek = firstDayOfMonth.getDay() === 0 ? 7 : firstDayOfMonth.getDay();
+
+        for (let i = 0; i < firstDayWeek; i++) {
+            cores += '<button type="button" class="rangepicker__cell" data-value=""></button>';
+        }
+
+        //нужно проверять каждую ячейку, входит ли она своей датой в промежуток
+
+        for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
+            const coreDate = new Date(date.getFullYear(), date.getMonth(), i);
+            const transformedDate = coreDate.toISOString();
+
+            cores += `<button type="button" class="${this.getClassFromDate(coreDate)}" data-value="${transformedDate}">${i}</button>`
+        }
+
+
+        return cores;
+    }
+
+    getClassFromDate(coreDate) {
+        if (coreDate.getTime() === this.selected.from.getTime()) {
+            console.log(coreDate, this.selected.from);
+            return 'rangepicker__cell rangepicker__selected-from';
+        } else if (coreDate.getTime() === this.selected.to.getTime()) {
+            return 'rangepicker__cell rangepicker__selected-to';
+        } else if (coreDate.getTime() < this.selected.from.getTime() ||
+         coreDate.getTime() > this.selected.to.getTime()) {
+            return 'rangepicker__cell';
+        }  return 'rangepicker__cell rangepicker__selected-between'
+    }
+
+    getCoreClassForRender() {
+
     }
 
 
