@@ -111,4 +111,3 @@ describe('forms-fetch-api-part-2/product-form-v1', () => {
     expect(productFormComponent.element).not.toBeInTheDocument();
   });
 });
-
