@@ -110,7 +110,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
     expect(selectedBetween.length).toEqual(totalDays - RANGE_BORDERS_COUNT);
   });
 
-  it.only('should clear highlighting of previous selection', () => {
+  it('should clear highlighting of previous selection', () => {
     const input = rangePicker.element.querySelector('.rangepicker__input');
 
     input.dispatchEvent(new MouseEvent('click', {
