@@ -5,8 +5,11 @@ export default class RangePicker {
     input = null;
     selector = null;
     constructor({ from = new Date(), to = new Date() } = {}) {
-        this.selected = { from, to };
-        this.globalFrom = from;
+        this.selected = {
+            from: new Date(from.getTime()),
+            to: new Date(to.getTime())
+        };
+        this.globalFrom = new Date(from.getTime());;
         this.createElement();
         this.setSubElements();
         this.createOpenCalendarOnClickListeners();
@@ -35,6 +38,14 @@ export default class RangePicker {
 
     handleOpenCalendar() {
         this.element.classList.toggle('rangepicker_open');
+        const { selector } = this.subElements;
+        if (!selector.querySelector('.rangepicker__selector-arrow')) {
+            selector.innerHTML = `
+              <div class="rangepicker__selector-arrow"></div>
+              <div class="rangepicker__selector-control-left"></div>
+              <div class="rangepicker__selector-control-right"></div>
+            `;
+        }
         this.renderCalendar();
     }
 
@@ -93,14 +104,11 @@ export default class RangePicker {
         const secondMonth = new Date(this.globalFrom);
         secondMonth.setMonth(secondMonth.getMonth() + 1);
 
-        selector.innerHTML =
-            `
-            <div class="rangepicker__selector-arrow"></div>
-            <div class="rangepicker__selector-control-left"></div>
-            <div class="rangepicker__selector-control-right"></div>
-            ${this.renderMonthBody(this.globalFrom)}
-            ${this.renderMonthBody(secondMonth)}
-            `;
+        const calendars = selector.querySelectorAll('.rangepicker__calendar');
+        calendars.forEach(calendar => calendar.remove());
+
+        selector.insertAdjacentHTML('beforeend', this.renderMonthBody(this.globalFrom));
+        selector.insertAdjacentHTML('beforeend', this.renderMonthBody(secondMonth));
 
         this.printCells();
     }
@@ -152,7 +160,8 @@ export default class RangePicker {
             const dateInCell = new Date(cell.dataset.value);
             cell.className = 'rangepicker__cell';
             if (this.selected.to && this.selected.to.getTime() === this.selected.from.getTime()) {
-                cell.classList.add('rangepicker__selected-from rangepicker__selected-to');
+                cell.classList.add('rangepicker__selected-from');
+                cell.classList.add('rangepicker__selected-to');
             } else if (dateInCell.getTime() === this.selected.from.getTime()) {
                 cell.classList.add('rangepicker__selected-from');
             } else if (this.selected.to && dateInCell.getTime() === this.selected.to.getTime()) {
@@ -162,12 +171,6 @@ export default class RangePicker {
                 cell.classList.add('rangepicker__selected-between');
             }
         });
-    }
-
-    updateInput() {
-        const { from, to } = this.subElements;
-        from.textContent = this.transformDate(this.selected.from);
-        to.textContent = this.transformDate(this.selected.to || this.selected.from);
     }
 
     getTempalte() {
