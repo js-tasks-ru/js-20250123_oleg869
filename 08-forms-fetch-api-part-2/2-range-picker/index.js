@@ -1,33 +1,22 @@
+
 export default class RangePicker {
     subElements = {};
     element = null;
+    input = null;
+    selector = null;
     constructor({ from = new Date(), to = new Date() } = {}) {
         this.selected = { from, to };
         this.globalFrom = from;
         this.createElement();
         this.setSubElements();
-        this.handleContainer = {};
-        this.createOnClickOpenCalendarListener();
+        this.createOpenCalendarOnClickListeners();
+        this.createOnClickSelectLiestener();
     }
 
     createElement() {
         const element = document.createElement('div');
         element.innerHTML = this.getTempalte();
         this.element = element.firstElementChild;
-    }
-
-    createOnClickSellListener() {
-        const cell = this.element.querySelectorAll('.rangepicker__date-grid');
-        this.handleContainer.cellClick = this.handleOnCellClick;
-        cell.forEach(grid => {
-            grid.addEventListener('click', this.handleContainer.cellClick);
-        });
-    }
-
-    createOnClickOpenCalendarListener() {
-        const { input } = this.subElements;
-        this.handleContainer.toggleCalendar = () => this.handleOpenCalendarOnClick();
-        input.addEventListener('click', this.handleContainer.toggleCalendar);
     }
 
     setSubElements() {
@@ -38,53 +27,82 @@ export default class RangePicker {
         }
     }
 
-    handleOpenCalendarOnClick() {
+    createOpenCalendarOnClickListeners() {
+        const { input } = this.subElements;
+        this.input = input;
+        this.input.addEventListener('click', () => this.handleOpenCalendar());
+    }
+
+    handleOpenCalendar() {
         this.element.classList.toggle('rangepicker_open');
-        if (this.element.classList.contains('rangepicker_open')) this.renderCalendar();
+        this.renderCalendar();
     }
 
-    handleOnCellClick = (event) => {
-        const target = event.target.closest('.rangepicker__cell');
-        const cellDate = new Date(target.dataset.value);
-        this.onSellClick(cellDate);
+    createOnClickSelectLiestener() {
+        const { selector } = this.subElements;
+        this.selector = selector;
+        this.selector.addEventListener('click', this.handleSelectorClick.bind(this));
     }
 
-    onSellClick(cellDate) {
-        if (this.selected.to) { // очистить и установить from
-            this.selected = { from: cellDate, to: null };
-            this.globalFrom = new Date(cellDate);
+    handleSelectorClick(event) {
+        const target = event.target;
+        if (target.closest('.rangepicker__selector-control-left')) {
+            this.prevMonth();
+        } else if (target.closest('.rangepicker__selector-control-right')) {
+            this.nextMonth();
+        } else if (target.closest('.rangepicker__cell')) {
+            this.onSellClick(target);
+        }
+    }
+
+    onSellClick(target) {
+        const dateInCell = new Date(target.dataset.value);
+        if (this.selected.to) {
+            this.selected = { from: dateInCell, to: null };
         } else {
-            this.selected.to = cellDate;
+            this.selected.to = dateInCell;
             if (this.selected.from > this.selected.to) {
                 let tmp = null;
                 tmp = this.selected.from;
                 this.selected.from = this.selected.to;
                 this.selected.to = tmp;
             }
+            const from = this.subElements.from;
+            const to = this.subElements.to;
+            from.textContent = this.transformDate(this.selected.from);
+            to.textContent = this.transformDate(this.selected.to);
         }
-        this.renderCalendar();
-        this.updateInput();
+        this.printCells();
     }
 
-    updateInput() {
-        const { from, to } = this.subElements;
-        from.textContent = this.transformDate(this.selected.from);
-        to.textContent = this.transformDate(this.selected.to || this.selected.from);
+    /////
+    prevMonth() {
+        this.globalFrom.setMonth(this.globalFrom.getMonth() - 1);
+        this.renderCalendar();
     }
+
+    nextMonth() {
+        this.globalFrom.setMonth(this.globalFrom.getMonth() + 1);
+        this.renderCalendar();
+    }
+
+    ////
 
     renderCalendar() {
         const { selector } = this.subElements;
-        selector.innerHTML = '';
         const secondMonth = new Date(this.globalFrom);
         secondMonth.setMonth(secondMonth.getMonth() + 1);
+
         selector.innerHTML =
             `
-        <div class="rangepicker__selector-arrow"></div>
-        ${this.renderMonthBody(this.globalFrom)}
-        ${this.renderMonthBody(secondMonth)}
-      `;
-      this.destroySellListeners();
-      this.createOnClickSellListener();
+            <div class="rangepicker__selector-arrow"></div>
+            <div class="rangepicker__selector-control-left"></div>
+            <div class="rangepicker__selector-control-right"></div>
+            ${this.renderMonthBody(this.globalFrom)}
+            ${this.renderMonthBody(secondMonth)}
+            `;
+
+        this.printCells();
     }
 
     renderMonthBody(date) {
@@ -110,49 +128,47 @@ export default class RangePicker {
     }
 
     renderDaysInCalendar(date) {
-        let cores = '';
+        let cells = '';
         const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
         const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
         const firstDayWeek = firstDayOfMonth.getDay() || 7;
 
-        for (let i = 1; i < firstDayWeek; i++) {
-            cores += '<button type="button" class="rangepicker__cell" disabled></button>';
-        }
-
         for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
             const dateFromMonth = new Date(date.getFullYear(), date.getMonth(), day);
-            cores += `<button type="button" 
-                   class="${this.setCellClass(dateFromMonth)}" 
+            cells += `<button type="button" 
+                   class="rangepicker__cell" 
                    data-value="${dateFromMonth.toISOString()}"
                    ${day === 1 ? `style="--start-from: ${firstDayWeek}"` : ''}
                  >${day}</button>`;
         }
 
-        return cores;
+        return cells;
     }
 
-    setCellClass(dateFromMonth) {
-        const { from, to } = this.selected;
-        
-        if (!to) {
-            return dateFromMonth.getTime() === from.getTime() 
-                ? 'rangepicker__cell rangepicker__selected-from' 
-                : 'rangepicker__cell';
-        } else if (this.selected.to && this.selected.to.getTime() === this.selected.from.getTime() &&
-            this.selected.to.getTime() === dateFromMonth.getTime()) {
-            return 'rangepicker__cell rangepicker__selected-from rangepicker__selected-to';
-        } else if (dateFromMonth.getTime() === this.selected.from.getTime()) {
-            return 'rangepicker__cell rangepicker__selected-from';
-        } else if (this.selected.to && dateFromMonth.getTime() === this.selected.to.getTime()) {
-            return 'rangepicker__cell rangepicker__selected-to';
-        } else if (this.selected.to && this.selected.to.getTime() > dateFromMonth.getTime() &&
-            this.selected.from.getTime() < dateFromMonth.getTime()) {
-            return 'rangepicker__cell rangepicker__selected-between';
-        }
-        else return 'rangepicker__cell';
+    printCells() {
+        const cells = this.subElements.selector.querySelectorAll('.rangepicker__cell');
+        cells.forEach(cell => {
 
+            const dateInCell = new Date(cell.dataset.value);
+            cell.className = 'rangepicker__cell';
+            if (this.selected.to && this.selected.to.getTime() === this.selected.from.getTime()) {
+                cell.classList.add('rangepicker__selected-from rangepicker__selected-to');
+            } else if (dateInCell.getTime() === this.selected.from.getTime()) {
+                cell.classList.add('rangepicker__selected-from');
+            } else if (this.selected.to && dateInCell.getTime() === this.selected.to.getTime()) {
+                cell.classList.add('rangepicker__selected-to');
+            } else if (this.selected.to && dateInCell.getTime() > this.selected.from.getTime() &&
+                dateInCell.getTime() < this.selected.to.getTime()) {
+                cell.classList.add('rangepicker__selected-between');
+            }
+        });
     }
 
+    updateInput() {
+        const { from, to } = this.subElements;
+        from.textContent = this.transformDate(this.selected.from);
+        to.textContent = this.transformDate(this.selected.to || this.selected.from);
+    }
 
     getTempalte() {
         return `
@@ -177,25 +193,17 @@ export default class RangePicker {
         return date.toLocaleDateString("ru-RU", options);
     }
 
-    destroySellListeners(){
-        const cells = this.element.querySelectorAll('.rangepicker__date-grid');
-        if (this.handleContainer.cellClick) {
-            cells.forEach(grid => {
-                grid.removeEventListener('click', this.handleContainer.cellClick);
-            });
-        }
+    destroyOpenCalendarListeners() {
+        this.input.removeEventListener('click', () => this.handleOpenCalendar());
     }
 
-    destroyEventListeners() {
-        const { input } = this.subElements;
-        if (this.handleContainer.toggleCalendar) {
-            input.removeEventListener('click', this.handleContainer.toggleCalendar);
-        }        
+    destroyOnClickSelectLiestener() {
+        this.selector.removeEventListener('click', this.handleSelectorClick.bind(this));
     }
 
     destroy() {
-        this.destroySellListeners();
-        this.destroyEventListeners();
+        this.destroyOpenCalendarListeners();
+        this.destroyOnClickSelectLiestener();
         this.remove();
     }
 
