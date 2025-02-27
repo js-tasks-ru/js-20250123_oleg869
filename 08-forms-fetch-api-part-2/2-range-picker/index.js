@@ -33,7 +33,7 @@ export default class RangePicker {
     createOpenCalendarOnClickListeners() {
         const { input } = this.subElements;
         this.input = input;
-        this.input.addEventListener('click', () => this.handleOpenCalendar());
+        //this.input.addEventListener('click', () => this.handleOpenCalendar());
     }
 
     handleOpenCalendar() {
@@ -200,7 +200,8 @@ export default class RangePicker {
     }
 
     destroyOpenCalendarListeners() {
-        this.input.removeEventListener('click', () => this.handleOpenCalendar());
+        //this.input.removeEventListener('click', () => this.handleOpenCalendar());
+        
     }
 
     dispatchEvent() {
