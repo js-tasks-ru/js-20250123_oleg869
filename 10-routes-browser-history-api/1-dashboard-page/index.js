@@ -12,6 +12,7 @@ export default class Page {
     subElements = {};
     componentContainer = {};
     constructor() {
+        this.handleOnDateSelect = this.handleOnDateSelect.bind(this);
         this.createElement();
         this.setSubElements();
     }
@@ -89,12 +90,18 @@ export default class Page {
 
     }
 
+
     createEventListenerOnSetDateOnRangePicker() {
-        this.componentContainer.rangePicker.element.addEventListener('date-select', event => {
-            const { from, to } = event.detail;
-            console.log(from, to);
-            this.updateComponents(from, to);
-        });
+        this.componentContainer.rangePicker.element.addEventListener(
+            'date-select',
+            this.handleOnDateSelect
+        );
+    }
+
+    handleOnDateSelect(event) {
+        const { from, to } = event.detail;
+        console.log(from, to);
+        this.updateComponents(from, to);
     }
 
     async updateComponents(from, to) {
@@ -129,11 +136,13 @@ export default class Page {
             </div>`;
     }
 
-    remove() {
-
-    }
 
     destroy() {
+        this.componentContainer.rangePicker.element.removeEventListener(
+            'date-select',
+            this.onDateSelect
+        );
+
         Object.values(this.componentContainer).forEach(component => {
             component.destroy();
         });
