@@ -30,7 +30,7 @@ export default class ColumnChart {
     switch (label) {
       case 'orders': return 'dashboard__chart_orders';
       case 'sales': return 'dashboard__chart_sales';
-      case 'customers': return 'dashboard__chart_sales';
+      case 'customers': return 'dashboard__chart_customers';
       default: return 'column-chart column-chart_loading';
     }
   }
