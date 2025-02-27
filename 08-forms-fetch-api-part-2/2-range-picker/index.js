@@ -9,7 +9,11 @@ export default class RangePicker {
             from: new Date(from.getTime()),
             to: new Date(to.getTime())
         };
-        this.globalFrom = new Date(from.getTime());;
+        this.globalFrom = new Date(from.getTime());
+
+        this.handleOpenCalendar = this.handleOpenCalendar.bind(this);
+        this.handleSelectorClick = this.handleSelectorClick.bind(this);
+
         this.createElement();
         this.setSubElements();
         this.createOpenCalendarOnClickListeners();
@@ -33,7 +37,8 @@ export default class RangePicker {
     createOpenCalendarOnClickListeners() {
         const { input } = this.subElements;
         this.input = input;
-        //this.input.addEventListener('click', () => this.handleOpenCalendar());
+        this.input.addEventListener('click', this.handleOpenCalendar);
+
     }
 
     handleOpenCalendar() {
@@ -52,7 +57,7 @@ export default class RangePicker {
     createOnClickSelectLiestener() {
         const { selector } = this.subElements;
         this.selector = selector;
-        this.selector.addEventListener('click', this.handleSelectorClick.bind(this));
+        this.selector.addEventListener('click', this.handleSelectorClick);
     }
 
     handleSelectorClick(event) {
@@ -200,8 +205,8 @@ export default class RangePicker {
     }
 
     destroyOpenCalendarListeners() {
-        //this.input.removeEventListener('click', () => this.handleOpenCalendar());
-        
+        this.input.removeEventListener('click', this.handleOpenCalendar);
+
     }
 
     dispatchEvent() {
@@ -216,7 +221,7 @@ export default class RangePicker {
     }
 
     destroyOnClickSelectLiestener() {
-        this.selector.removeEventListener('click', this.handleSelectorClick.bind(this));
+        this.selector.removeEventListener('click', this.handleSelectorClick);
     }
 
     destroy() {
