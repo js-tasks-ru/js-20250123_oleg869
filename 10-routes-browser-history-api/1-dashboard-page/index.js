@@ -69,13 +69,17 @@ export default class Page {
         this.subElements.customersChart.append(customersChart.element);
 
         ///
+        const url = new URL('api/dashboard/bestsellers', BACKEND_URL);
+        url.searchParams.set('from', from.toISOString());
+        url.searchParams.set('to', to.toISOString());
+
         const sortableTable = new SortableTable(header, {
-            url: new URL('api/dashboard/bestsellers', BACKEND_URL).href,
+            url: url.href,
             sorted: { id: 'title', order: 'asc' },
             isSortLocally: false
         });
         this.componentContainer.sortableTable = sortableTable;
-        this.subElements.sortableTable.append(sortableTable.element);                
+        this.subElements.sortableTable.append(sortableTable.element);
 
         const rangePicker = new RangePicker({ from, to });
         this.componentContainer.rangePicker = rangePicker;
@@ -85,7 +89,7 @@ export default class Page {
 
     }
 
-    createEventListenerOnSetDateOnRangePicker(){
+    createEventListenerOnSetDateOnRangePicker() {
         this.componentContainer.rangePicker.element.addEventListener('date-select', event => {
             const { from, to } = event.detail;
             console.log(from, to);
@@ -93,12 +97,18 @@ export default class Page {
         });
     }
 
-    async updateComponents(from, to){
+    async updateComponents(from, to) {
         this.componentContainer.ordersChart.update(from, to);
         this.componentContainer.salesChart.update(from, to);
         this.componentContainer.customersChart.update(from, to);
-        
-        await this.componentContainer.sortableTable.save();
+
+        const url = new URL('api/dashboard/bestsellers', BACKEND_URL);
+        url.searchParams.set('from', from.toISOString());
+        url.searchParams.set('to', to.toISOString());
+        this.componentContainer.sortableTable.url = url;
+        this.componentContainer.sortableTable.resetPagination();
+        await this.componentContainer.sortableTable.loadData();
+        await this.componentContainer.sortableTable.render();
     }
 
 
@@ -119,19 +129,19 @@ export default class Page {
             </div>`;
     }
 
-    remove(){
+    remove() {
 
     }
 
-    destroy(){
+    destroy() {
         Object.values(this.componentContainer).forEach(component => {
             component.destroy();
-          });
-          this.remove();
+        });
+        this.remove();
     }
 
     remove() {
         this.element.remove();
     }
-    
+
 }
