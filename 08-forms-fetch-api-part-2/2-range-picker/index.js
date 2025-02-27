@@ -80,8 +80,11 @@ export default class RangePicker {
             }
             const from = this.subElements.from;
             const to = this.subElements.to;
+
             from.textContent = this.transformDate(this.selected.from);
             to.textContent = this.transformDate(this.selected.to);
+            this.dispatchEvent();
+            this.close();
         }
         this.printCells();
     }
@@ -198,6 +201,17 @@ export default class RangePicker {
 
     destroyOpenCalendarListeners() {
         this.input.removeEventListener('click', () => this.handleOpenCalendar());
+    }
+
+    dispatchEvent() {
+        this.element.dispatchEvent(new CustomEvent('date-select', {
+            bubbles: true,
+            detail: this.selected
+        }));
+    }
+
+    close() {
+        this.element.classList.remove('rangepicker_open');
     }
 
     destroyOnClickSelectLiestener() {

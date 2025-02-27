@@ -242,7 +242,6 @@ export default class ProductForm {
     }));
   }
 
-
   removeEventListener() {
     this.subElements.productForm.removeEventListener('submit', this.handleOnSubmit);
   }

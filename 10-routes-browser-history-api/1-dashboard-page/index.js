@@ -75,17 +75,30 @@ export default class Page {
             isSortLocally: false
         });
         this.componentContainer.sortableTable = sortableTable;
-        this.subElements.sortableTable.append(sortableTable.element);
-
-        //await this.updateTable(from, to);
-
-        ///        
+        this.subElements.sortableTable.append(sortableTable.element);                
 
         const rangePicker = new RangePicker({ from, to });
         this.componentContainer.rangePicker = rangePicker;
         this.subElements.rangePicker.append(rangePicker.element);
+        this.createEventListenerOnSetDateOnRangePicker();
         ///
 
+    }
+
+    createEventListenerOnSetDateOnRangePicker(){
+        this.componentContainer.rangePicker.element.addEventListener('date-select', event => {
+            const { from, to } = event.detail;
+            console.log(from, to);
+            this.updateComponents(from, to);
+        });
+    }
+
+    async updateComponents(from, to){
+        this.componentContainer.ordersChart.update(from, to);
+        this.componentContainer.salesChart.update(from, to);
+        this.componentContainer.customersChart.update(from, to);
+        
+        await this.componentContainer.sortableTable.save();
     }
 
 
