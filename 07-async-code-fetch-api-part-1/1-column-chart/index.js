@@ -35,6 +35,8 @@ export default class ColumnChart extends ColumnChartV1 {
 
     processResponse(response) {
         this.data = Object.values(response);
+        this.value = this.data.reduce((sum, item) => sum + item, 0);
+        this.subElements.header.innerHTML = this.formatHeading(this.value);
         this.subElements.body.innerHTML = this.setColumnProps();
         this.element.classList.toggle('column-chart_loading', !this.data.length);
     }

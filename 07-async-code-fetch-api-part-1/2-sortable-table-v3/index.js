@@ -2,7 +2,7 @@ import fetchJson from './utils/fetch-json.js';
 import SortableTableV2 from '../../06-events-practice/1-sortable-table-v2/index.js';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class SortableTable extends SortableTableV2 {
-  constructor(headersConfig, { sorted = {}, url, isSortLocally = false, batchSize = 30 } = {}) {
+  constructor(headersConfig, { sorted = {}, url='', isSortLocally = false, batchSize = 30 } = {}) {    
     super(headersConfig);
     this.isSortLocally = isSortLocally;
     this.url = new URL(url, BACKEND_URL);
@@ -69,10 +69,11 @@ export default class SortableTable extends SortableTableV2 {
 
   }
 
-  /*createListener() {
-    super.createListener();
-    window.addEventListener('scroll', this.handleWindowScroll);
-  }*/
+  resetPagination() {
+    this.iteration = 1;
+    this.hasMoreData = true;
+    this.data = [];
+  }
 
   createScrollListener() {
     window.addEventListener('scroll', this.handleWindowScroll);
@@ -87,7 +88,7 @@ export default class SortableTable extends SortableTableV2 {
   async sortOnServer(id, order) {
     this.data = await this.loadData(id, order);
     await this.render();
-  }
+  }  
 
   destroy() {
     super.destroy();
