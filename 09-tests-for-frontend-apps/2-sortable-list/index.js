@@ -57,11 +57,30 @@ export default class SortableList {
         this.movingObject.style.left = `${event.clientX - this.shiftX}px`;
         this.movingObject.style.top = `${event.clientY - this.shiftY}px`;
 
-        const arrElem = Array.from(this.element.children).filter(
-            elem => elem !== this.movingObject && elem !== this.space
-        );
+        const children = this.element.children;
+        let insertPosition = -1;
 
-        
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            if (child === this.movingObject || child === this.space) {
+                console.log('Не менять');
+                continue;
+            };
+
+            const coordinates = child.getBoundingClientRect();
+            if (event.clientY < coordinates.top + coordinates.height / 2) {
+                insertPosition = i;
+                console.log('Больше');
+                break;
+            }
+        }
+
+        if (insertPosition === -1) {
+            this.element.append(this.space);
+        } else {
+            const targetElement = children[insertPosition];
+            targetElement.before(this.space);
+        }
     }
 
     deleteObjet(deleteObjet) {
