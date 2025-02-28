@@ -56,13 +56,17 @@ export default class SortableList {
     handleOnPointerMove(event) {
         this.movingObject.style.left = `${event.clientX - this.shiftX}px`;
         this.movingObject.style.top = `${event.clientY - this.shiftY}px`;
+
+        const arrElem = Array.from(this.element.children).filter(
+            elem => elem !== this.movingObject && elem !== this.space
+        );
+
+        
     }
 
     deleteObjet(deleteObjet) {
         deleteObjet.closest('li').remove();
     }
-
-
 
     setElementsInItem() {
         this.element = document.createElement('ul');
