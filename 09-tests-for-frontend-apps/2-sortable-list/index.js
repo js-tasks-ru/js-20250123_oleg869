@@ -1,6 +1,7 @@
 export default class SortableList {
     element = {};
     movingObject = {};
+    space = {};
     constructor( {items} ){
         this.items = items;
         this.render();
@@ -28,7 +29,25 @@ export default class SortableList {
 
     moveObject(grabObjet, event){
         this.movingObject = grabObjet.closest('li');
-        console.log(this.movingObject);
+        const coordinates = this.movingObject.getBoundingClientRect();
+        console.log(coordinates);
+
+        this.space = document.createElement('li');
+        this.space.className = 'sortable-list__placeholder';
+        this.space.style.width = `${ coordinates.width }px`;
+        this.space.style.height = `${ coordinates.height }px`;
+        console.log(this.space);
+
+        this.movingObject.style.position = 'absolute';
+        this.movingObject.style.width = `${ coordinates.width }px`;
+        this.movingObject.style.height = `${ coordinates.height }px`;
+        this.movingObject.classList.add('sortable-list__item_dragging');
+        this.movingObject.style.left = `${ coordinates.left }px`;
+        this.movingObject.style.top = `${ coordinates.top }px`;
+        this.movingObject.after(this.space);
+
+        this.shiftX = event.clientX - coordinates.left;
+        this.shiftY = event.clientY - coordinates.top;
     }
 
     deleteObjet(deleteObjet){
