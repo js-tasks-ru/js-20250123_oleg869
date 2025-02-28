@@ -2,61 +2,69 @@ export default class SortableList {
     element = {};
     movingObject = {};
     space = {};
-    constructor( {items} ){
+    constructor({ items }) {
         this.items = items;
         this.render();
         this.handleOnPointerDown = this.handleOnPointerDown.bind(this);
+        this.handleOnPointerMove = this.handleOnPointerMove.bind(this);
         this.createOnPointerDownListener();
     }
-    
 
-    createOnPointerDownListener(){
+
+    createOnPointerDownListener() {
         this.element.addEventListener('pointerdown', this.handleOnPointerDown);
     }
 
-    handleOnPointerDown(event){
+    handleOnPointerDown(event) {
         const grabObjet = event.target.closest('[data-grab-handle]');
-        if(grabObjet){
+        if (grabObjet) {
             event.preventDefault();
-            this.moveObject(grabObjet, event);   
-        }        
-        
+            this.moveObject(grabObjet, event);
+        }
+
         const deleteObjet = event.target.closest('[data-delete-handle]');
-        if(deleteObjet){
+        if (deleteObjet) {
             this.deleteObjet(deleteObjet);
         }
     }
 
-    moveObject(grabObjet, event){
+    moveObject(grabObjet, event) {
         this.movingObject = grabObjet.closest('li');
         const coordinates = this.movingObject.getBoundingClientRect();
         console.log(coordinates);
 
         this.space = document.createElement('li');
         this.space.className = 'sortable-list__placeholder';
-        this.space.style.width = `${ coordinates.width }px`;
-        this.space.style.height = `${ coordinates.height }px`;
+        this.space.style.width = `${coordinates.width}px`;
+        this.space.style.height = `${coordinates.height}px`;
         console.log(this.space);
 
         this.movingObject.style.position = 'absolute';
-        this.movingObject.style.width = `${ coordinates.width }px`;
-        this.movingObject.style.height = `${ coordinates.height }px`;
+        this.movingObject.style.width = `${coordinates.width}px`;
+        this.movingObject.style.height = `${coordinates.height}px`;
         this.movingObject.classList.add('sortable-list__item_dragging');
-        this.movingObject.style.left = `${ coordinates.left }px`;
-        this.movingObject.style.top = `${ coordinates.top }px`;
+        this.movingObject.style.left = `${coordinates.left}px`;
+        this.movingObject.style.top = `${coordinates.top}px`;
         this.movingObject.after(this.space);
 
         this.shiftX = event.clientX - coordinates.left;
         this.shiftY = event.clientY - coordinates.top;
+
+        document.addEventListener('pointermove', this.handleOnPointerMove);
     }
 
-    deleteObjet(deleteObjet){
+    handleOnPointerMove(event) {
+        this.movingObject.style.left = `${event.clientX - this.shiftX}px`;
+        this.movingObject.style.top = `${event.clientY - this.shiftY}px`;
+    }
+
+    deleteObjet(deleteObjet) {
         deleteObjet.closest('li').remove();
     }
 
-   
 
-    setElementsInItem(){
+
+    setElementsInItem() {
         this.element = document.createElement('ul');
         this.element.className = 'sortable-list';
         this.items.forEach(element => {
@@ -64,15 +72,15 @@ export default class SortableList {
         });
     }
 
-    render(){
+    render() {
         this.setElementsInItem();
     }
 
-    remove(){
+    remove() {
         this.element.remove();
     }
 
-    destroy(){
+    destroy() {
         this.remove();
         this.element.removeEventListener('pointerdown', this.handleOnPointerDown);
     }
