@@ -7,6 +7,7 @@ export default class SortableList {
         this.render();
         this.handleOnPointerDown = this.handleOnPointerDown.bind(this);
         this.handleOnPointerMove = this.handleOnPointerMove.bind(this);
+        this.handleOnPointerUp = this.handleOnPointerUp.bind(this);
         this.createOnPointerDownListener();
     }
 
@@ -51,6 +52,7 @@ export default class SortableList {
         this.shiftY = event.clientY - coordinates.top;
 
         document.addEventListener('pointermove', this.handleOnPointerMove);
+        document.addEventListener('pointerup', this.handleOnPointerUp);
     }
 
     handleOnPointerMove(event) {
@@ -83,6 +85,17 @@ export default class SortableList {
         }
     }
 
+    handleOnPointerUp() {
+        this.space.replaceWith(this.movingObject);
+        this.movingObject.classList.remove('sortable-list__item_dragging');
+        this.movingObject.removeAttribute('style');
+        this.space.remove();
+
+        document.removeEventListener('pointermove', this.handleOnPointerMove);
+        document.removeEventListener('pointerup', this.handleOnPointerUp);
+
+    }
+
     deleteObjet(deleteObjet) {
         deleteObjet.closest('li').remove();
     }
@@ -106,5 +119,7 @@ export default class SortableList {
     destroy() {
         this.remove();
         this.element.removeEventListener('pointerdown', this.handleOnPointerDown);
+        document.removeEventListener('pointermove', this.handleOnPointerMove);
+        document.removeEventListener('pointerup', this.handleOnPointerUp);
     }
 }
