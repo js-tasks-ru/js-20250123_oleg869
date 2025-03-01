@@ -1,4 +1,4 @@
-import SortableList from '../../2-sortable-list/src/index.js';
+import SortableList from '../2-sortable-list/index.js';
 import escapeHtml from './utils/escape-html.js';
 import fetchJson from './utils/fetch-json.js';
 import ProductFormV1 from '../../08-forms-fetch-api-part-2/1-product-form-v1/index.js';
@@ -20,7 +20,13 @@ export default class ProductForm extends ProductFormV1 {
   setSortableList(){
     const { imageListContainer } = this.subElements;
 
-    const SortableList
+    const sortableList = new SortableList({
+      items: Array.from(imageListContainer.querySelectorAll('.sortable-list__item'))
+    });
+
+    ////
+    imageListContainer.querySelector('ul').replaceWith(sortableList.element);
+    this.sortableList = sortableList;
   }
 
 

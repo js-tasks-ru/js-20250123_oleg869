@@ -65,14 +65,12 @@ export default class SortableList {
         for (let i = 0; i < children.length; i++) {
             const child = children[i];
             if (child === this.movingObject || child === this.space) {
-                console.log('Не менять');
                 continue;
             };
 
             const coordinates = child.getBoundingClientRect();
             if (event.clientY < coordinates.top + coordinates.height / 2) {
                 insertPosition = i;
-                console.log('Больше');
                 break;
             }
         }
