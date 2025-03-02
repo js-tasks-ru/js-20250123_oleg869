@@ -7,6 +7,7 @@ const IMGUR_CLIENT_ID = '28aaa2e823b03b1';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class ProductForm extends ProductFormV1 {
+  sortableList = null;
   constructor (productId) {
     super(productId);
   }
@@ -27,6 +28,11 @@ export default class ProductForm extends ProductFormV1 {
     ////
     imageListContainer.querySelector('ul').replaceWith(sortableList.element);
     this.sortableList = sortableList;
+  }
+
+  destroy(){
+    super.destroy();
+    if(this.sortableList) this.sortableList.destroy();
   }
 
 
