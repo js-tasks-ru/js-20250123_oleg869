@@ -26,17 +26,19 @@ export default class SortableTable {
   }
   getTableBody() {
     return this.data.map(product => {
+      const tagName = this.rowLinks ? 'a' : 'div';
+      const hrefAttr = this.rowLinks ? `href="/products/${product.id}"` : '';
       return `
-              <a href="/products/${product.id}" class="sortable-table__row">
+              <${tagName} ${hrefAttr} class="sortable-table__row">
                 ${this.headerConfig.map(({ id, template }) => {
-                const tableContent = product[id];
-                return template ?
-                  template(tableContent) :
-                  `<div class="sortable-table__cell">${tableContent}</div>`;
-              }).join('')}
-              </a>
-          `;
-    }).join('');
+                const value = product[id];
+                return template
+                  ? template(value)
+                  : `<div class="sortable-table__cell">${value}</div>`;
+                }).join('')}
+                  </${tagName}>
+                `;
+              }).join('');
   }
 
   getTemplate() {

@@ -23,7 +23,6 @@ export default class Router {
 
         if (this.currentPage) {
             this.currentPage.destroy();
-            this.currentPage = null;
         }
 
         this.currentPage = new PageClass();
