@@ -2,8 +2,13 @@ import fetchJson from './utils/fetch-json.js';
 import SortableTableV2 from '../../06-events-practice/1-sortable-table-v2/index.js';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class SortableTable extends SortableTableV2 {
-  constructor(headersConfig, { sorted = {}, url='', isSortLocally = false, batchSize = 30 } = {}) {    
-    super(headersConfig);
+  constructor(headersConfig, { sorted = {}, url = '', isSortLocally = false, batchSize = 30 } = {}) {
+    super(headersConfig, {
+      data: [],
+      sorted: sorted,
+      url: url,
+      isSortLocally: isSortLocally
+    });
     this.isSortLocally = isSortLocally;
     this.url = new URL(url, BACKEND_URL);
     this.sorted.id = sorted.id;
@@ -49,7 +54,7 @@ export default class SortableTable extends SortableTableV2 {
     }
 
   }
-  
+
   async loadNextStack() {
     this.iteration++;
     try {
@@ -86,10 +91,16 @@ export default class SortableTable extends SortableTableV2 {
   }
 
   async sortOnServer(id, order) {
+    this.sorted.id = id;
+    this.sorted.order = order;
+    this.resetPagination();
     this.data = await this.loadData(id, order);
-    await this.render();
-  }  
-
+    this.element.classList.add('sortable-table_loading');
+    this.subElements.body.innerHTML = this.getTableBody();
+    this.updateHeaderSortArrow();
+    this.element.classList.remove('sortable-table_loading');
+  }
+  
   destroy() {
     super.destroy();
     window.removeEventListener('scroll', this.handleWindowScroll);
