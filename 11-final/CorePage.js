@@ -7,7 +7,9 @@ export default class CorePage {
         for (const component of Object.values(this.componentContainer)){
             component.destroy();
         }
-        this.element.remove();
+        if (this.element) {
+            this.element.remove();
+        }
         this.element = null;
     }
 }

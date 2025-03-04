@@ -1,22 +1,29 @@
-import CorePage from './CorePage.js'
-import SortableTable from '../../07-async-code-fetch-api-part-1/2-sortable-table-v3/index.js'
+import CorePage from './CorePage.js';
+import SortableTable from '../../07-async-code-fetch-api-part-1/2-sortable-table-v3/index.js';
 import header from './sales-header.js';
-
-
-// https://course-js.javascript.ru/api/rest/orders?createdAt_gte=2025-02-02T10%3A21%3A32.745Z&createdAt_lte=2025-03-04T10%3A21%3A32.745Z&_sort=createdAt&_order=desc&_start=0&_end=30
-
-
+import RangePicker from '../../08-forms-fetch-api-part-2/2-range-picker/index.js';
 
 const BACKEND_URL = 'https://course-js.javascript.ru/';
 
 export default class SalesPage extends CorePage {
     constructor() {
         super();
-        this.loadTableData();
+        this.selectedDateRange = {
+            from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+            to: new Date()
+        };
+        this.loadComponents();
+
     }
 
-    loadTableData() {
+    loadComponents() {
         this.componentContainer = {
+
+            rangePicker: new RangePicker({
+                from: this.selectedDateRange.from,
+                to: this.selectedDateRange.to
+            }),
+
             salesTable: new SortableTable(header, {
                 url: new URL('api/rest/orders', BACKEND_URL),
                 isSortLocally: false,
@@ -30,26 +37,47 @@ export default class SalesPage extends CorePage {
 
     async render() {
         const container = document.createElement('div');
-        container.className = 'sales';
-
-        const title = document.createElement('h1');
-        title.textContent = 'Sales';
-        container.append(title);
+        container.className = 'sales full-height flex-column';
 
         const tableContainer = document.createElement('div');
-        tableContainer.dataset.element = 'salesTable';
+        tableContainer.dataset.element = 'ordersContainer';
         container.append(tableContainer);
 
         await this.componentContainer.salesTable.render();
         tableContainer.append(this.componentContainer.salesTable.element);
 
+        const filterSection = document.createElement('div');
+        filterSection.className = 'content__top-panel';
+
+        const title = document.createElement('h1');
+        title.textContent = 'Sales';
+        filterSection.append(title);
+
+        filterSection.append(this.componentContainer.rangePicker.element);
+
+        container.prepend(filterSection);
+
+        this.componentContainer.rangePicker.element.addEventListener('date-select', event => {
+            this.selectedDateRange = event.detail;
+            this.updateTableData();
+        });
+
         return container;
+    }
+
+    async updateTableData() {
+        const url = new URL('api/rest/orders', BACKEND_URL);
+        url.searchParams.set('from', this.selectedDateRange.from.toISOString());
+        url.searchParams.set('to', this.selectedDateRange.to.toISOString());
+        console.log('update');
+        this.componentContainer.salesTable.url = url;
+        await this.componentContainer.salesTable.loadData();
     }
 
     destroy() {
         super.destroy();
         this.componentContainer.salesTable.destroy();
+        this.componentContainer.rangePicker.destroy();
     }
-
 
 }
