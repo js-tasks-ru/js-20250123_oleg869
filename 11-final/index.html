@@ -1,63 +1,69 @@
-<!doctype html>
+<html>
+
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./styles/all.css">
 </head>
+
 <body>
 
-<div id="root"></div>
+    <main class="main">
+        <div class="progress-bar">
+            <div class="progress-bar__line"></div>
+        </div>
 
-<script type="module">
-  import SortableTable from './index.js';
 
-  const header = [
-    {
-      id: 'images',
-      title: 'Image',
-      sortable: false,
-      template: (data = []) => {
-        return `
-          <div class="sortable-table__cell">
-            <img class="sortable-table-image" alt="Image" src="${data[0]?.url}">
-          </div>
-        `;
-      }
-    },
-    {
-      id: 'title',
-      title: 'Name',
-      sortable: true,
-      sortType: 'string'
-    },
-    {
-      id: 'quantity',
-      title: 'Quantity',
-      sortable: true,
-      sortType: 'number'
-    },
-    {
-      id: 'price',
-      title: 'Price',
-      sortable: true,
-      sortType: 'number'
-    },
-    {
-      id: 'status',
-      title: 'Status',
-      sortable: true,
-      sortType: 'number',
-      template: data => {
-        return `<div class="sortable-table__cell">
-          ${data > 0 ? 'Active' : 'Inactive'}
-        </div>`;
-      }
-    },
-  ];
+        <aside class="sidebar">
+            <h2 class="sidebar__title">
+                <a href="/" data-page>shop admin</a>
+            </h2>
 
-  const sortableTable = new SortableTable(header, {
-    url: 'api/rest/products'
-  });
+            <nav class="sidebar__nav">
+                <ul>
+                    <li>
+                        <a href="/" data-page>
+                            <i class="icon-dashboard"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/products" data-page>
+                            <i class="icon-products"></i>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/categories" data-page>
+                            <i class="icon-categories"></i>
+                            <span>Categories</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/sales" data-page>
+                            <i class="icon-sales"></i>
+                            <span>Sales</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
-  root.append(sortableTable.element);
-</script>
+            <div class="sidebar__footer">
+                <button type="button" class="sidebar__toggler">
+                    <i class="icon-toggle-sidebar"></i>
+                    <span>Toggle sidebar</span>
+                </button>
+            </div>
+        </aside>
+
+        <section class="content" id="content">
+
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="./main.js"></script>
+
 </body>
+
+</html>
