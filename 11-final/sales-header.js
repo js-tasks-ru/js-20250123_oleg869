@@ -1,40 +1,9 @@
 const header = [
-    {
-        id: 'id',
-        title: 'ID',
-        sortable: false,
-        sortable: true,
-        sortType: 'number'
-    },
-    {
-        id: 'client',
-        title: 'Client',
-        sortable: true,
-        sortType: 'string'
-    },
-    {
-        id: 'date',
-        title: 'Date',
-        sortable: true,
-        sortType: 'date'
-    },
-    {
-        id: 'price',
-        title: 'Price',
-        sortable: true,
-        sortType: 'number'
-    },
-    {
-        id: 'status',
-        title: 'Status',
-        sortable: true,
-        sortType: 'number',
-        template: data => {
-            return `<div class="sortable-table__cell">
-            ${data > 0 ? 'Delivered' : 'On the way'}
-          </div>`;
-        }
-    },
+    { id: 'id', title: 'ID', sortable: true, dataType: 'number' },
+    { id: 'user', title: 'Client', sortable: true, dataType: 'string' },
+    { id: 'createdAt', title: 'Date', sortable: true, dataType: 'date' },
+    { id: 'totalCost', title: 'Price', sortable: true, dataType: 'number' },
+    { id: 'delivery', title: 'Delivery Status', sortable: true, dataType: 'string' }
 ];
 
 export default header;
