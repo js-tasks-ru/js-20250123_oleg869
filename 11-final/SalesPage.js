@@ -12,6 +12,7 @@ export default class SalesPage extends CorePage {
             from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
             to: new Date()
         };
+        this.handleDateSelect = this.handleDateSelect.bind(this);
         this.loadComponents();
 
     }
@@ -57,25 +58,35 @@ export default class SalesPage extends CorePage {
 
         container.prepend(filterSection);
 
-        this.componentContainer.rangePicker.element.addEventListener('date-select', event => {
-            this.selectedDateRange = event.detail;
-            this.updateTableData();
-        });
+        this.componentContainer.rangePicker.element.addEventListener(
+            'date-select',
+            this.handleDateSelect
+        );
 
         return container;
     }
 
+    handleDateSelect = (event) => {
+        this.selectedDateRange = event.detail;
+        this.updateTableData();
+    };
+
     async updateTableData() {
         const url = new URL('api/rest/orders', BACKEND_URL);
-        url.searchParams.set('from', this.selectedDateRange.from.toISOString());
-        url.searchParams.set('to', this.selectedDateRange.to.toISOString());
-        console.log('update');
+        url.searchParams.set('createdAt_gte', this.selectedDateRange.from.toISOString());
+        url.searchParams.set('createdAt_lte', this.selectedDateRange.to.toISOString());
         this.componentContainer.salesTable.url = url;
+        this.componentContainer.salesTable.resetPagination();
         await this.componentContainer.salesTable.loadData();
+        await this.componentContainer.salesTable.render();
     }
 
     destroy() {
         super.destroy();
+        this.componentContainer.rangePicker.element.removeEventListener(
+            'date-select',
+            this.handleDateSelect
+        );
         this.componentContainer.salesTable.destroy();
         this.componentContainer.rangePicker.destroy();
     }

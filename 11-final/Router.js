@@ -23,7 +23,7 @@ export default class Router {
 
         if (this.currentPage) {
             this.currentPage.destroy();
-            this.currentPage = null; 
+            this.currentPage = null;
         }
 
         this.currentPage = new PageClass();
@@ -38,9 +38,12 @@ export default class Router {
     }
 
     handleLinkClick = (event) => {
-        const link = event.target.closest('a[data-page]');
-        event.preventDefault();
-        this.navigate(link.getAttribute('href'));
+        const link = event.target.closest('a[data-page="true"]');
+        if (!link) return;
+        if (link.href.startsWith(window.location.origin)) {
+            event.preventDefault();
+            this.navigate(link.getAttribute('href'));
+        }
     }
 
     navigate(url) {

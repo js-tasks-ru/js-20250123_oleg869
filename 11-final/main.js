@@ -4,7 +4,7 @@ import SalesPage from './SalesPage.js';
 
 const routes = {
     '/': DashboardPage,
-    '/sales': SalesPage
+    '/sales/': SalesPage
 };
   
   new Router(routes);
