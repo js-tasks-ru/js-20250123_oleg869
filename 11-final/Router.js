@@ -1,9 +1,8 @@
 export default class Router {
     currentPage = null;
-    element = null;
     constructor(routes) {
         this.routes = routes;
-
+        this.element = document.getElementById('content');
         this.handleOperations = {
             popstate: this.handlePopState.bind(this),
             click: this.handleLinkClick.bind(this)
