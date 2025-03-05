@@ -19,7 +19,7 @@ export default class Router {
 
     async handleRoute() {
         const path = window.location.pathname;
-        const PageClass = this.routes[path] || this.routes['/'];
+        const PageClass = this.routes[path] || this.routes['/11-final/'];
 
         if (this.currentPage) {
             this.currentPage.destroy();

@@ -8,9 +8,15 @@ const BACKEND_URL = 'https://course-js.javascript.ru/';
 export default class ProductPage extends CorePage {
     sortableTable = null;
     doubleSlider = null;
+    nameFilter = null;
+    statusFilter = null;
+    priceRange = { from: 0, to: 4000 };
     constructor() {
         super();
         this.loadComponents();
+        this.handlePriceChange = this.handlePriceChange.bind(this);
+        this.handleStatusChange = this.handleStatusChange.bind(this);
+        this.handleNameInput = this.handleNameInput.bind(this);
     }
 
     loadComponents() {
@@ -38,15 +44,51 @@ export default class ProductPage extends CorePage {
         const element = document.createElement('div');
         element.className = 'products-list'
         element.innerHTML = this.getTemplate();
-
+        
         const sliderContainer = element.querySelector('[data-elem="sliderContainer"]');
         sliderContainer.append(this.componentContainer.doubleSlider.element);
 
         const productTable = element.querySelector('[data-elem="sortable-table"]');
         await this.componentContainer.sortableTable.render();
         productTable.append(this.componentContainer.sortableTable.element);
+        this.element = element;
+        this.addEventListeners(this.element);        
+        return this.element;
+    }
 
-        return element;
+    addEventListeners(element){
+        this.componentContainer.doubleSlider.element.addEventListener('range-select', this.handlePriceChange);
+        element.querySelector('[data-elem="filterStatus"]').addEventListener('change', this.handleStatusChange);
+        element.querySelector('[data-elem="filterName"]').addEventListener('input', this.handleNameInput);
+    }
+
+    handlePriceChange = (event) => {
+        this.priceRange = event.detail;
+        this.updateTableData();
+    };
+
+    handleStatusChange = (event) => {
+        this.statusFilter = event.target.value;
+        this.updateTableData();
+    };
+
+    handleNameInput = (event) => {        
+        this.nameFilter = event.target.value.trim().toLowerCase();
+        this.updateTableData();
+    };    
+
+    async updateTableData() {
+        const url = new URL('api/rest/products', BACKEND_URL);
+        
+        url.searchParams.set('price_gte', this.priceRange.from);
+        url.searchParams.set('price_lte', this.priceRange.to);
+        if(this.statusFilter) url.searchParams.set('status', this.statusFilter);
+        if(this.nameFilter) url.searchParams.set('title_like', this.nameFilter);
+        
+        this.componentContainer.sortableTable.url = url;
+        this.componentContainer.sortableTable.resetPagination();
+        await this.componentContainer.sortableTable.loadData();
+        await this.componentContainer.sortableTable.render();
     }
 
     getTemplate() {
@@ -85,14 +127,10 @@ export default class ProductPage extends CorePage {
         `;
     }
 
-
-
-    async updateTableData() {
-
-    }
-
     destroy() {
         super.destroy();
-
+        this.componentContainer.doubleSlider.element.removeEventListener('range-select', this.handlePriceChange);
+        this.element.querySelector('[data-elem="filterStatus"]').removeEventListener('change', this.handleStatusChange);
+        this.element.querySelector('[data-elem="filterName"]').removeEventListener('input', this.handleNameInput);
     }
 }
