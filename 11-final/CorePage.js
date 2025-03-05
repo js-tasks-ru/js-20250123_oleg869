@@ -3,13 +3,17 @@ export default class CorePage {
     subElements = {};
     componentContainer = {};
 
-    destroy(){
-        for (const component of Object.values(this.componentContainer)){
+    destroy() {
+        for (const component of Object.values(this.componentContainer)) {
             component.destroy();
         }
         if (this.element) {
             this.element.remove();
         }
         this.element = null;
+    }
+
+    remove() {
+        this.element.remove();
     }
 }

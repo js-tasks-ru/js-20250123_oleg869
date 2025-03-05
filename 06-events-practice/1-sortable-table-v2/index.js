@@ -41,15 +41,17 @@ export default class SortableTable extends SortableTableV1 {
 
   handleHeaderCellClick = (e) => {
     const cellElement = e.target.closest('.sortable-table__cell[data-sortable="true"]');
-    if (!cellElement) return;
-    const { id, order } = cellElement.dataset;
-    const newOrder = order === 'desc' ? 'asc' : 'desc';
+    const { id } = cellElement.dataset;
+    const newOrder = this.sorted.order === 'desc' ? 'asc' : 'desc';
+
+    this.sorted.id = id;
+    this.sorted.order = newOrder;
+
     if (this.isSortLocally) {
       this.sortOnClient(id, newOrder);
     } else {
       this.sortOnServer(id, newOrder);
     }
-    cellElement.dataset.order = newOrder;
     this.updateHeaderSortArrow();
   }
 

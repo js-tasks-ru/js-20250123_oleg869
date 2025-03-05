@@ -73,9 +73,9 @@ export default class DashboardPage extends CorePage {
         url.searchParams.set('to', to.toISOString());
 
         const sortableTable = new SortableTable(header, {
-            url: url.href,
+            url: url,
             sorted: { id: 'title', order: 'asc' },
-            isSortLocally: false
+            isSortLocally: true
         });
         this.componentContainer.sortableTable = sortableTable;
         this.subElements.sortableTable.append(sortableTable.element);
@@ -84,8 +84,6 @@ export default class DashboardPage extends CorePage {
         this.componentContainer.rangePicker = rangePicker;
         this.subElements.rangePicker.append(rangePicker.element);
         this.createEventListenerOnSetDateOnRangePicker();
-        ///
-
     }
 
 
@@ -110,6 +108,8 @@ export default class DashboardPage extends CorePage {
         const url = new URL('api/dashboard/bestsellers', BACKEND_URL);
         url.searchParams.set('from', from.toISOString());
         url.searchParams.set('to', to.toISOString());
+        url.searchParams.set('_sort', this.componentContainer.sortableTable.sorted.id);
+        url.searchParams.set('_order', this.componentContainer.sortableTable.sorted.order);
         this.componentContainer.sortableTable.url = url;
         this.componentContainer.sortableTable.resetPagination();
         await this.componentContainer.sortableTable.loadData();
@@ -136,18 +136,14 @@ export default class DashboardPage extends CorePage {
 
 
     destroy() {
+        super.destroy();
         this.componentContainer.rangePicker.element.removeEventListener(
             'date-select',
-            this.onDateSelect
+            this.handleDateSelect
         );
-
-        Object.values(this.componentContainer).forEach(component => {
-            component.destroy();
-        });
-        this.remove();
+        console.log('DashboardPage destroyed');
+        this.componentContainer.rangePicker.destroy();
+        this.componentContainer.sortableTable.destroy();          
     }
 
-    remove() {
-        this.element.remove();
-    }
 }
