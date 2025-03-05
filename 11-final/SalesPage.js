@@ -51,6 +51,7 @@ export default class SalesPage extends CorePage {
         filterSection.className = 'content__top-panel';
 
         const title = document.createElement('h1');
+        title.className = 'page-title';
         title.textContent = 'Sales';
         filterSection.append(title);
 
