@@ -4,14 +4,15 @@ import SalesPage from './SalesPage.js';
 import ProductPage from './ProductPage.js';
 import AddProductPage from './AddProductPage.js';
 import EditProductPage from './EditProductPage.js';
-
+import CategoryPage from './CategoryPage.js';
 
 const routes = {
     '/11-final/': DashboardPage,
     '/sales': SalesPage,
     '/products': ProductPage,
     '/products/add': AddProductPage,
-    '/products/:id': EditProductPage
+    '/products/:id': EditProductPage,
+    '/categories': CategoryPage
 };
   
   new Router(routes);
