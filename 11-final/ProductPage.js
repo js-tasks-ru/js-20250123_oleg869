@@ -25,7 +25,8 @@ export default class ProductPage extends CorePage {
         this.componentContainer.sortableTable = new SortableTable(header, {
             url: url,
             sorted: { id: 'title', order: 'asc' },
-            isSortLocally: true
+            isSortLocally: true,
+            rowLinks: true
         });
 
         this.componentContainer.doubleSlider = new DoubleSlider({
@@ -47,7 +48,7 @@ export default class ProductPage extends CorePage {
         
         const sliderContainer = element.querySelector('[data-elem="sliderContainer"]');
         sliderContainer.append(this.componentContainer.doubleSlider.element);
-
+        await this.componentContainer.sortableTable.loadData();
         const productTable = element.querySelector('[data-elem="sortable-table"]');
         await this.componentContainer.sortableTable.render();
         productTable.append(this.componentContainer.sortableTable.element);

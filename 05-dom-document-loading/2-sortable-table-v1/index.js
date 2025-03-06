@@ -1,7 +1,8 @@
 export default class SortableTable {
   constructor(
     headerConfig = [],
-    data = []
+    { data = []} = {}
+
   ) {
     this.data = data;
     this.headerConfig = headerConfig;
@@ -31,14 +32,14 @@ export default class SortableTable {
       return `
               <${tagName} ${hrefAttr} class="sortable-table__row">
                 ${this.headerConfig.map(({ id, template }) => {
-                const value = product[id];
-                return template
-                  ? template(value)
-                  : `<div class="sortable-table__cell">${value}</div>`;
-                }).join('')}
+        const value = product[id];
+        return template
+          ? template(value)
+          : `<div class="sortable-table__cell">${value}</div>`;
+      }).join('')}
                   </${tagName}>
                 `;
-              }).join('');
+    }).join('');
   }
 
   getTemplate() {

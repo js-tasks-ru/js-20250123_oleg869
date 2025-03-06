@@ -2,7 +2,7 @@ import fetchJson from './utils/fetch-json.js';
 import SortableTableV2 from '../../06-events-practice/1-sortable-table-v2/index.js';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class SortableTable extends SortableTableV2 {
-  constructor(headersConfig, { sorted = {}, url = '', isSortLocally = false, batchSize = 30 } = {}) {
+  constructor(headersConfig, { sorted = {}, url = '', isSortLocally = false, batchSize = 30, rowLinks } = {}) {
     super(headersConfig, {
       data: [],
       sorted: sorted,
@@ -16,6 +16,7 @@ export default class SortableTable extends SortableTableV2 {
     this.batchSize = batchSize;
     this.hasMoreData = true;
     this.iteration = 1;
+    this.rowLinks = rowLinks;
     this.render(sorted.id, sorted.order);
     this.createScrollListener();
   }
