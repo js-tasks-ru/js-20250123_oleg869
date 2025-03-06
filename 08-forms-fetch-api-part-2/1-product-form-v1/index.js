@@ -111,16 +111,17 @@ export default class ProductForm {
         <label class="form-label">Описание</label>
         <textarea id="description" required="" class="form-control" name="description" data-element="productDescription"
          placeholder="Описание товара"
-         >${escapeHtml(this.productForm.description)}</textarea>
+         >${escapeHtml(this.productForm.description || '')}</textarea>
       </div>
     `;
 
   }
 
   getImageTemplate() {
+    const images = this.productForm.images || [];
     return `
       <div data-element="imageListContainer"><ul class="sortable-list">
-        ${(this.productForm.images).map(image => `
+        ${(images).map(image => `
             <li class="products-edit__imagelist-item sortable-list__item" style="">
             <input type="hidden" name="url" value="${escapeHtml(image.url)}">
             <input type="hidden" name="source" value="${escapeHtml(image.source)}">
@@ -145,21 +146,31 @@ export default class ProductForm {
           <div class="form-group form-group__half_left">
             <label class="form-label">Категория</label>
             <select id="subcategory" class="form-control" name="subcategory" data-element="subcategory">
-              ${this.getCategories()}
+              ${this.getCategories() || ''}
             </select>
           </div>
           `;
   }
 
   getCategories() {
-    return this.categories.map(category =>
-      category.subcategories.map(subcategory => `
-        <option value = "${escapeHtml(subcategory.id)}"
-        ${this.productForm.subcategory.id === subcategory.id ? `selected = ${escapeHtml(category.title)}` : ''}>
-        ${escapeHtml(category.title)} > ${escapeHtml(subcategory.title)}
-        </option>
-      `
-      ).join('') ?? '').join('') ?? '';
+    const selectedSubcategoryId = this.productForm.subcategory?.id || this.productForm.subcategory || '';
+    const categories = this.categories || [];
+
+    return categories
+      .map(category => {
+        const subcategories = category.subcategories || [];
+        return subcategories
+          .map(subcategory => {
+            const isSelected = selectedSubcategoryId === subcategory.id ? 'selected' : '';
+            return `
+            <option value="${escapeHtml(subcategory.id)}" ${isSelected}>
+              ${escapeHtml(category.title)} > ${escapeHtml(subcategory.title)}
+            </option>
+          `;
+          })
+          .join('');
+      })
+      .join('');
   }
 
   getPriceDiscountQuantityStatus() {
@@ -168,18 +179,18 @@ export default class ProductForm {
       <fieldset>
         <label class="form-label">Цена ($)</label>
         <input id="price" required="" type="number" name="price" class="form-control" placeholder="100"
-         value = ${escapeHtml(String(this.productForm.price))} data-element="price">
+         value = ${escapeHtml(String(this.productForm.price)) || ''} data-element="price">
       </fieldset>
       <fieldset>
         <label class="form-label">Скидка ($)</label>
         <input id="discount" required="" type="number" name="discount" class="form-control" placeholder="0"
-         value = ${escapeHtml(String(this.productForm.discount))} data-element="discount">
+         value = ${escapeHtml(String(this.productForm.discount)) || ''} data-element="discount">
       </fieldset>
     </div>
     <div class="form-group form-group__part-half">
       <label class="form-label">Количество</label>
       <input id="quantity" required="" type="number" class="form-control" name="quantity" placeholder="1"
-      value = ${escapeHtml(String(this.productForm.quantity))} data-element="quantity">
+      value = ${escapeHtml(String(this.productForm.quantity)) || ''} data-element="quantity">
     </div>
     <div class="form-group form-group__part-half">
       <label class="form-label">Статус</label>

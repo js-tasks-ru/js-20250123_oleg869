@@ -95,7 +95,7 @@ export default class ProductPage extends CorePage {
         return `
                 <div class="content__top-panel">
                     <h1 class="page-title">Товары</h1>
-                    <a href="/products/add" class="button-primary">Добавить товар</a>
+                    <a href="/products/add/" class="button-primary" data-page="true">Добавить товар</a>
                 </div>
                 <div class="content-box content-box_small">
                         <form class="form-inline">
