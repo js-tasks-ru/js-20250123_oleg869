@@ -1,4 +1,4 @@
-import ProductForm from "../../08-forms-fetch-api-part-2/1-product-form-v1/index.js";
+import ProductForm from "../../09-tests-for-frontend-apps/1-product-form-v2/index.js";
 import CorePage from './CorePage.js';
 
 export default class EditProductPage extends CorePage {

@@ -1,5 +1,5 @@
 import CorePage from './CorePage.js';
-import SortableTable from '../../07-async-code-fetch-api-part-1/2-sortable-table-v3/index.js';
+import SortableTable from './components/sortable-table/src/SortableTable.js';
 import header from './product-page.js';
 import DoubleSlider from '../../06-events-practice/3-double-slider/index.js';
 

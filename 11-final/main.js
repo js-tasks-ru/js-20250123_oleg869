@@ -8,9 +8,9 @@ import EditProductPage from './EditProductPage.js';
 
 const routes = {
     '/11-final/': DashboardPage,
-    '/sales/': SalesPage,
-    '/products/': ProductPage,
-    '/products/add/': AddProductPage,
+    '/sales': SalesPage,
+    '/products': ProductPage,
+    '/products/add': AddProductPage,
     '/products/:id': EditProductPage
 };
   

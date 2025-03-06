@@ -1,57 +1,83 @@
 export default class Router {
-    currentPage = null;
     constructor(routes) {
-        this.routes = routes;
-        this.element = document.getElementById('content');
-        this.handleOperations = {
-            popstate: this.handlePopState.bind(this),
-            click: this.handleLinkClick.bind(this)
-        }
-
-        this.createListeners();
-        this.handleRoute();
+      this.routes = routes;
+      this.contentNode = document.getElementById('content');
+      this.init();
     }
-
-    createListeners() {
-        window.addEventListener('popstate', this.handleOperations.popstate);
-        document.body.addEventListener('click', this.handleOperations.click);
+  
+    init() {
+      window.addEventListener('popstate', this.handleRoute.bind(this));
+      document.addEventListener('click', this.handleLinkClick.bind(this));
+      this.handleRoute();
     }
-
+  
     async handleRoute() {
-        const path = window.location.pathname;
-        const PageClass = this.routes[path] || this.routes['/11-final/'];
-
-        if (this.currentPage) {
-            this.currentPage.destroy();
+      const path = this.parsePath(window.location.pathname);
+      const [matchedRoute, params] = this.matchRoute(path);
+  
+      const PageClass = this.routes[matchedRoute] || this.routes['/404'] || this.routes['/11-final/'];
+  
+      if (this.currentPage) {
+        await this.currentPage.destroy();
+      }
+  
+      this.currentPage = new PageClass(params);
+      const element = await this.currentPage.render();
+      
+      this.contentNode.innerHTML = '';
+      this.contentNode.append(element);
+    }
+  
+    parsePath(path) {
+      return path.replace(/\/+$/, '') || '/';
+    }
+  
+    matchRoute(path) {
+      const routes = Object.keys(this.routes);
+      
+      for (const route of routes) {
+        const routePattern = route
+          .replace(/:\w+/g, '([^/]+)')
+          .replace(/\//g, '\\/');
+        
+        const regex = new RegExp(`^${routePattern}$`);
+        const match = path.match(regex);
+  
+        if (match) {
+          const params = this.extractParams(route, match);
+          return [route, params];
         }
-
-        this.currentPage = new PageClass();
-        const element = await this.currentPage.render();
-
-        this.element.innerHTML = '';
-        this.element.append(element);
+      }
+      
+      return [path, {}];
     }
-
-    handlePopState = () => {
-        this.handleRoute();
+  
+    extractParams(route, match) {
+      const paramNames = (route.match(/:\w+/g) || []).map(name => name.slice(1));
+      return paramNames.reduce((params, name, index) => {
+        params[name] = match[index + 1];
+        return params;
+      }, {});
     }
-
+  
     handleLinkClick = (event) => {
-        const link = event.target.closest('a[data-page="true"]');
-        if (!link) return;
-        if (link.href.startsWith(window.location.origin)) {
-            event.preventDefault();
-            this.navigate(link.getAttribute('href'));
-        }
+      const link = event.target.closest('a[data-page="true"]');
+      if (!link) return;
+  
+      const href = new URL(link.href);
+      if (href.origin === window.location.origin) {
+        event.preventDefault();
+        this.navigate(href.pathname);
+      }
     }
-
-    navigate(url) {
-        history.pushState(null, null, url);
-        this.handleRoute();
+  
+    navigate(path) {
+      history.pushState(null, null, path);
+      this.handleRoute();
     }
-
+  
     destroy() {
-        window.removeEventListener('popstate', this.listeners.popstate);
-        document.body.removeEventListener('click', this.listeners.click);
+      window.removeEventListener('popstate', this.handleRoute);
+      document.removeEventListener('click', this.handleLinkClick);
     }
-}
+  }
