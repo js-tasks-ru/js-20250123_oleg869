@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="./styles/all.css">
 </head>
 
-<body>
+<body class>
 
     <main class="main">
         <div class="progress-bar">
@@ -20,7 +20,7 @@
             </h2>
 
             <nav class="sidebar__nav">
-                <ul>
+                <ul class="sidebar__nav">
                     <li>
                         <a href="/11-final" data-page="true">
                             <i class="icon-dashboard"></i>
@@ -48,12 +48,13 @@
                 </ul>
             </nav>
 
-            <div class="sidebar__footer">
-                <button type="button" class="sidebar__toggler">
-                    <i class="icon-toggle-sidebar"></i>
-                    <span>Toggle sidebar</span>
-                </button>
-            </div>
+            <ul class="sidebar__nav sidebar__nav_bottom">
+                <li>
+                  <button type="button" class="sidebar__toggler">
+                    <i class="icon-toggle-sidebar"></i> <span>Скрыть панель</span>
+                  </button>
+                </li>
+            </ul>
         </aside>
 
         <section class="content" id="content">

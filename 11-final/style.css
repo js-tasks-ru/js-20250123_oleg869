@@ -243,5 +243,7 @@
   --cols: 6;
 }
 
-
+::marker {
+  display: none;
+}
 
