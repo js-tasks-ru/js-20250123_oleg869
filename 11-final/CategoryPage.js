@@ -5,19 +5,23 @@ const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class CategoryPage extends CorePage {
     constructor() {
-        super();
-
+        this.categories = [];
     }
 
     async render() {
         const element = document.createElement('div');
-        element.className = 'categories'
-        const response = await this.loadCategories();
-        element.innerHTML = this.getTemplate(response);
+        element.className = 'categories';
+
+        try{
+            this.categories = await this.loadCategories();
+            element.innerHTML = this.getTemplate();
+            this.loadComponents();
+        }
+        catch(e){
+            console.error('Error:', e);
+        }
 
         this.element = element;
-        this.loadComponents();
-
         return this.element;
     }
 
@@ -37,34 +41,28 @@ export default class CategoryPage extends CorePage {
     }
 
     async loadCategories() {
-        try {
-            const url = new URL('/api/rest/categories', BACKEND_URL);
-            url.searchParams.set('_sort', 'weight');
-            url.searchParams.set('_refs', 'subcategory');
-            const response = await fetchJson(url);
-            return response;
-        }
-        catch (e) { console.error('Error loading categories data', e) }
+        const url = new URL('/api/rest/categories', BACKEND_URL);
+        url.searchParams.set('_sort', 'weight');
+        url.searchParams.set('_refs', 'subcategory');
+        return await fetchJson(url);
     }
 
-    getTemplate(response = []) {
+    getTemplate() {
         return `
             <div class="content__top-panel">
                 <h1 class="page-title">Категории товаров</h1>
             </div>
             <p>лол, копирну текст прямо с сайта Подкатегории можно перетаскивать, меняя их порядок внутри своей категории.</p>
             <div data-elem="categoriesContainer">
-                ${this.getCategories(response)}
+                ${this.getCategories()}
             </div>
         `;
     }
 
-    getCategories(response) {
-        return response.map(category => `
+    getCategories() {
+        return this.categories.map(category => `
             <div class="category category_open" data-id="${category.id}">
-                <header class="category__header">
-                    ${category.title}
-                </header>
+                <header class="category__header">${category.title}</header>
                 <div class="category__body">
                     <div class="subcategory-list">
                         <ul class="sortable-list">
