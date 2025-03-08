@@ -5,6 +5,7 @@ const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class CategoryPage extends CorePage {
     constructor() {
+        super();
         this.categories = [];
     }
 
