@@ -10,8 +10,8 @@ export default class CategoryPage extends CorePage {
 
     async render() {
         const element = document.createElement('div');
-        element.className = 'categories';
-
+        element.className = 'categories';        
+        this.element = element;
         try{
             this.categories = await this.loadCategories();
             element.innerHTML = this.getTemplate();
@@ -21,7 +21,6 @@ export default class CategoryPage extends CorePage {
             console.error('Error:', e);
         }
 
-        this.element = element;
         return this.element;
     }
 
