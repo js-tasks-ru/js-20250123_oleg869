@@ -25,7 +25,7 @@ export default class SortableTable extends SortableTableV1 {
   }
 
   initInfoFromSort() {
-    
+
     let header = this.subElements.header.querySelector(`[data-id="${this.sorted.id}"]`);
 
     if (!header) {
@@ -34,20 +34,44 @@ export default class SortableTable extends SortableTableV1 {
       header = this.subElements.header.querySelector(`[data-id="${this.sorted.id}"]`);
     }
 
-    if(this.data) this.sort(this.sorted.id, this.sorted.order);
+    if (this.data) this.sort(this.sorted.id, this.sorted.order);
     header.dataset.order = this.sorted.order;
     header.append(this.arrowElement);
   }
 
   handleHeaderCellClick = (e) => {
     const cellElement = e.target.closest('.sortable-table__cell[data-sortable="true"]');
-    if (!cellElement) return;
-    const { id, order } = cellElement.dataset;
-    const sortOrder = order === 'desc' ? 'asc' : 'desc';
-    this.sort(id, sortOrder);
-    cellElement.dataset.order = sortOrder;
-    cellElement.append(this.arrowElement);
+    const { id } = cellElement.dataset;
+    const newOrder = this.sorted.order === 'desc' ? 'asc' : 'desc';
+
+    this.sorted.id = id;
+    this.sorted.order = newOrder;
+
+    if (this.isSortLocally) {
+      this.sortOnClient(id, newOrder);
+    } else {
+      this.sortOnServer(id, newOrder);
+    }
+    this.updateHeaderSortArrow();
   }
+
+  updateHeaderSortArrow() {
+    const currentHeaderCell = this.subElements.header.querySelector(`[data-id="${this.sorted.id}"]`);
+
+    this.subElements.header.querySelectorAll('.sortable-table__cell').forEach(cell => {
+      cell.dataset.order = '';
+      const existingArrow = cell.querySelector('.sortable-table__sort-arrow');
+      if (existingArrow) {
+        cell.removeChild(existingArrow);
+      }
+    });
+
+    if (currentHeaderCell) {
+      currentHeaderCell.dataset.order = this.sorted.order;
+      currentHeaderCell.append(this.arrowElement);
+    }
+  }
+
 
   sort(sortField, sortOrder) {
     if (this.isSortLocally) {
